@@ -53,8 +53,12 @@ app.use(
   })
 );
 
-app.use(csrf());
 app.use((req, res, next) => {
+  if (req.path === "/auth/callback") return next();
+  csrf()(req, res, next);
+});
+app.use((req, res, next) => {
+  if (req.path === "/auth/callback") return next();
   res.locals.csrfToken = req.csrfToken();
   next();
 });
