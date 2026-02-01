@@ -1,0 +1,30 @@
+{
+  "name": "sqmcc",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.93.3",
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^12.6.2",
+    "connect-sqlite3": "^0.9.16",
+    "dotenv": "^17.2.3",
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "express-session": "^1.19.0",
+    "csurf": "^1.11.0",
+    "helmet": "^8.1.0",
+    "slugify": "^1.6.6",
+    "zod": "^4.3.6",
+    "zod-validation-error": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11",
+    "tailwindcss": "^4.1.18"
+  }
+}

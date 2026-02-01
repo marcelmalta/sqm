@@ -1,0 +1,102 @@
+<nav class="w-full glass border-b border-white/40 shadow-soft sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <a href="/" class="flex-shrink-0 flex items-center gap-3">
+          <img src="/images/logo-horizontal.png" alt="SQM Brasil" class="h-8 md:h-9 w-auto drop-shadow" />
+        </a>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex md:items-center md:space-x-8">
+        <a href="/"
+          class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Home</a>
+        <a href="/forum"
+          class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Forum</a>
+        <% if (user?.role==='admin' ) { %>
+          <a href="/admin/new-post"
+            class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Novo
+            Post</a>
+          <% } %>
+
+            <% if (user) { %>
+              <div class="ml-4 flex items-center gap-4">
+                <span class="text-xs text-text-meta">
+                  <%= user.email %>
+                </span>
+                <form method="post" action="/logout" class="inline">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button
+                    class="bg-white/70 hover:bg-white text-text-main px-4 py-2 rounded-lg text-sm font-semibold transition-colors border border-white/60">Sair</button>
+                </form>
+              </div>
+              <% } else { %>
+                <div class="ml-4 flex items-center gap-3">
+                  <a href="/login"
+                    class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Entrar</a>
+                  <a href="/register"
+                    class="bg-primary hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-glow transition-colors">Criar
+                    Conta</a>
+                </div>
+                <% } %>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="flex items-center md:hidden">
+        <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
+          class="inline-flex items-center justify-center p-2 rounded-md text-text-meta hover:text-text-main hover:bg-white/60 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+          aria-controls="mobile-menu" aria-expanded="false">
+          <span class="sr-only">Abrir menu</span>
+          <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="hidden md:hidden glass border-t border-white/40" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="/"
+        class="text-text-main hover:text-primary hover:bg-white/60 block px-3 py-2 rounded-md text-base font-semibold">Home</a>
+      <a href="/forum"
+        class="text-text-main hover:text-primary hover:bg-white/60 block px-3 py-2 rounded-md text-base font-semibold">Forum</a>
+      <% if (user?.role==='admin' ) { %>
+        <a href="/admin/new-post"
+          class="text-text-main hover:text-primary hover:bg-white/60 block px-3 py-2 rounded-md text-base font-semibold">Novo
+          Post</a>
+        <% } %>
+    </div>
+    <div class="pt-4 pb-4 border-t border-white/40">
+      <% if (user) { %>
+        <div class="flex items-center px-5">
+          <div class="ml-3">
+            <div class="text-base font-semibold leading-none text-text-main">
+              <%= user.email %>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 px-2 space-y-1">
+          <form method="post" action="/logout">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button
+              class="block w-full text-left px-3 py-2 rounded-md text-base font-semibold text-text-meta hover:text-text-main hover:bg-white/60">Sair</button>
+          </form>
+        </div>
+        <% } else { %>
+          <div class="mt-3 px-2 space-y-2">
+            <a href="/login"
+              class="block w-full text-center px-4 py-2 border border-white/60 rounded-lg text-base font-semibold text-text-main bg-white/70 hover:bg-white">Entrar</a>
+            <a href="/register"
+              class="block w-full text-center px-4 py-2 border border-transparent rounded-lg text-base font-semibold text-white bg-primary hover:bg-teal-700 shadow-glow">Criar
+              Conta</a>
+          </div>
+          <% } %>
+    </div>
+  </div>
+</nav>
+
+

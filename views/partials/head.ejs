@@ -1,0 +1,107 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SQMCC</title>
+<link rel="icon" type="image/png" href="/images/favicon.png" />
+
+<!-- Google Fonts: Fraunces + Manrope -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- TailwindCSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#0F766E',
+                    secondary: '#FDE68A',
+                    accent: '#FB7185',
+                    'bg-main': '#F8F4EE',
+                    'text-main': '#1F2937',
+                    'text-meta': '#6B7280',
+                },
+                fontFamily: {
+                    sans: ['Manrope', 'sans-serif'],
+                    serif: ['Fraunces', 'serif'],
+                },
+                boxShadow: {
+                    'soft': '0 6px 24px rgba(15, 23, 42, 0.08)',
+                    'glow': '0 10px 30px rgba(15, 118, 110, 0.18)',
+                },
+                borderRadius: {
+                    'xl': '14px',
+                    '2xl': '20px',
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    :root {
+        --bg: #F8F4EE;
+        --bg-2: #EDF4F2;
+        --ink: #1F2937;
+        --muted: #6B7280;
+        --teal: #0F766E;
+        --sand: #FDE68A;
+        --coral: #FB7185;
+    }
+    body {
+        font-family: 'Manrope', sans-serif;
+        color: var(--ink);
+        background: radial-gradient(900px 500px at 10% -10%, #E9F5F2 0%, transparent 60%),
+                    radial-gradient(800px 500px at 90% 10%, #FCE7E0 0%, transparent 60%),
+                    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+        min-height: 100vh;
+    }
+    body::before,
+    body::after {
+        content: "";
+        position: fixed;
+        z-index: 0;
+        filter: blur(40px);
+        opacity: 0.25;
+        pointer-events: none;
+    }
+    body::before {
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, var(--teal), transparent 60%);
+        top: 10%;
+        left: -80px;
+    }
+    body::after {
+        width: 360px;
+        height: 360px;
+        background: radial-gradient(circle, var(--coral), transparent 60%);
+        bottom: -60px;
+        right: -80px;
+    }
+    main, nav {
+        position: relative;
+        z-index: 1;
+    }
+    h1, h2, h3, .headline {
+        font-family: 'Fraunces', serif;
+        letter-spacing: -0.01em;
+    }
+    .page-enter {
+        animation: pageFade 650ms ease-out both;
+    }
+    @keyframes pageFade {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .btn-primary {
+        box-shadow: 0 12px 30px rgba(15, 118, 110, 0.25);
+    }
+    .glass {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(10px);
+    }
+</style>
+
+

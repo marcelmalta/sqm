@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+
+<head>
+  <%- include("partials/head") %>
+</head>
+
+<body class="page-enter bg-bg-main text-text-main flex flex-col min-h-screen">
+  <%- include("partials/nav", { user: null }) %>
+
+    <main class="flex-grow flex items-center justify-center p-4">
+      <div class="glass rounded-2xl shadow-soft border border-white/60 p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+          <h1 class="headline text-2xl font-bold text-text-main">Definir nova senha</h1>
+          <p class="text-text-meta mt-2">Crie uma senha segura para continuar.</p>
+        </div>
+
+        <% if (error) { %>
+          <div class="mb-6 p-4 bg-red-50 text-red-700 rounded-lg text-sm font-medium border border-red-100">
+            <%= error %>
+          </div>
+        <% } %>
+
+        <% if (success) { %>
+          <div class="mb-6 p-4 bg-green-50 text-green-700 rounded-lg text-sm font-medium border border-green-100">
+            <%= success %>
+          </div>
+        <% } %>
+
+        <form action="/reset" method="POST" class="space-y-5" id="reset-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" name="access_token" id="access_token">
+          <input type="hidden" name="refresh_token" id="refresh_token">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Nova senha</label>
+            <input type="password" name="password" required minlength="6"
+              class="w-full h-12 rounded-lg border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all text-base px-4"
+              placeholder="Minimo 6 caracteres">
+          </div>
+          <button class="w-full h-12 bg-primary text-white rounded-xl font-bold hover:bg-teal-700 transition-colors shadow-glow">
+            Atualizar senha
+          </button>
+        </form>
+
+        <p class="text-xs text-text-meta mt-4">
+          Se voce abriu esta pagina sem o link do email, solicite uma nova recuperacao.
+        </p>
+      </div>
+    </main>
+
+  <script>
+    (function () {
+      if (!window.location.hash) return;
+      var params = new URLSearchParams(window.location.hash.substring(1));
+      var accessToken = params.get('access_token');
+      var refreshToken = params.get('refresh_token');
+      if (accessToken) document.getElementById('access_token').value = accessToken;
+      if (refreshToken) document.getElementById('refresh_token').value = refreshToken;
+    })();
+  </script>
+</body>
+
+</html>
+
+
+
+

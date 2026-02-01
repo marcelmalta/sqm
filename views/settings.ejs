@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+
+<head>
+    <%- include("partials/head") %>
+</head>
+
+<body class="page-enter bg-bg-main text-text-main flex flex-col min-h-screen">
+    <%- include("partials/nav", { user }) %>
+
+        <main class="flex-grow flex items-center justify-center p-4">
+            <div class="glass rounded-2xl shadow-soft border border-white/60 p-6 md:p-8 w-full max-w-xl">
+                <div class="border-b border-gray-100 pb-6 mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900">Configurações do Perfil</h1>
+                    <p class="text-text-meta text-sm mt-1">Atualize suas informações públicas.</p>
+                </div>
+
+                <% if (locals.success) { %>
+                    <div
+                        class="mb-6 p-4 bg-green-50 text-green-700 rounded-lg text-sm font-medium border border-green-100">
+                        Perfil atualizado com sucesso!
+                    </div>
+                    <% } %>
+
+                        <form action="/settings" method="POST" class="space-y-6">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                                <input type="text" value="<%= user.email %>" disabled
+                                    class="w-full bg-white/70 border border-gray-200 rounded-lg px-4 py-2 text-gray-500 cursor-not-allowed">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Nome de Exibição</label>
+                                <input type="text" name="name" value="<%= profile.name || '' %>"
+                                    placeholder="<%= user.email.split('@')[0] %>"
+                                    class="w-full h-10 rounded-lg border-gray-200 focus:ring-primary focus:border-primary px-4">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Bio (Sobre você)</label>
+                                <textarea name="bio" rows="4"
+                                    class="w-full rounded-lg border-gray-200 focus:ring-primary focus:border-primary p-3"
+                                    placeholder="Compartilhe um pouco sobre sua jornada..."><%= profile.bio || '' %></textarea>
+                                <p class="text-xs text-text-meta mt-1 text-right">Será visível no seu perfil público.
+                                </p>
+                            </div>
+
+                            <div class="pt-4">
+                                <button
+                                    class="w-full h-12 bg-primary text-white rounded-xl font-bold hover:bg-teal-700 transition-colors shadow-glow">
+                                    Salvar Alterações
+                                </button>
+                            </div>
+                        </form>
+            </div>
+        </main>
+</body>
+
+</html>
+
+
+
