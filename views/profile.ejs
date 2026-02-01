@@ -19,7 +19,7 @@
                         <%= profileUser.email ? profileUser.email[0].toUpperCase() : '?' %>
                     </div>
 
-                    <h1 class="text-xl font-bold text-gray-900 mb-1">
+                    <h1 class="text-xl font-bold text-text-main mb-1">
                         <%= profileUser.name || profileUser.email %>
                     </h1>
 
@@ -28,20 +28,20 @@
                             class="inline-block px-2 py-1 bg-red-100 text-red-700 text-xs font-bold uppercase tracking-wider rounded-md mb-4">Administrador</span>
                         <% } else { %>
                             <span
-                                class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wider rounded-md mb-4">Membro</span>
+                                class="inline-block px-2 py-1 bg-bg-surface text-text-meta text-xs font-bold uppercase tracking-wider rounded-md mb-4">Membro</span>
                             <% } %>
 
                                 <div class="text-sm text-text-main italic mb-6 leading-relaxed">
                                     "<%= profileUser.bio || 'Sem biografia.' %>"
                                 </div>
 
-                                <div class="border-t border-gray-100 pt-4 text-xs text-text-meta">
+                                <div class="border-t border-white/10 pt-4 text-xs text-text-meta">
                                     Membro desde <%= new Date(profileUser.created_at).toLocaleDateString('pt-BR') %>
                                 </div>
 
                                 <% if (user && user.id===profileUser.id) { %>
                                     <a href="/settings"
-                                        class="mt-6 block w-full py-2 border border-gray-200 rounded-lg text-sm font-medium hover:bg-white/70 transition-colors">
+                                        class="mt-6 block w-full py-2 border border-white/10 rounded-lg text-sm font-medium hover:bg-bg-card/70 transition-colors">
                                         Editar Perfil
                                     </a>
                                     <% } %>
@@ -53,13 +53,13 @@
 
                 <!-- Tabs -->
                 <div
-                    class="flex items-center gap-1 bg-white p-1 rounded-xl shadow-sm border border-white/60 mb-6 w-fit">
+                    class="flex items-center gap-1 bg-bg-card p-1 rounded-xl shadow-sm border border-white/60 mb-6 w-fit">
                     <a href="?tab=topics"
-                        class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'topics' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-white/70' %>">
+                        class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'topics' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-bg-card/70' %>">
                         Tópicos (<%= stats.topics %>)
                     </a>
                     <a href="?tab=comments"
-                        class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'comments' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-white/70' %>">
+                        class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'comments' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-bg-card/70' %>">
                         Comentários (<%= stats.comments %>)
                     </a>
                 </div>
@@ -87,7 +87,7 @@
                                             </span>
                                         </div>
                                         <h3
-                                            class="font-bold text-gray-900 group-hover:text-primary transition-colors mb-1">
+                                            class="font-bold text-text-main group-hover:text-primary transition-colors mb-1">
                                             <%= item.title %>
                                         </h3>
                                         <p class="text-sm text-text-meta line-clamp-2">
@@ -128,6 +128,7 @@
 </body>
 
 </html>
+
 
 
 

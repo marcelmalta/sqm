@@ -8,126 +8,92 @@
 <body class="page-enter bg-bg-main text-text-main flex flex-col min-h-screen">
   <%- include("partials/nav", { user }) %>
 
-    <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8">
+  <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8">
+    <div class="flex items-center gap-2 text-sm text-text-meta mb-6 justify-center">
+      <span class="px-3 py-1 bg-primary/15 text-primary rounded-full font-semibold uppercase text-xs tracking-wider"><%= post.category %></span>
+      <span class="w-1 h-1 rounded-full bg-white/20"></span>
+      <span><%= new Date(post.created_at).toLocaleDateString('pt-BR') %></span>
+    </div>
 
-      <!-- Meta Header -->
-      <div class="flex items-center gap-2 text-sm text-text-meta mb-8 justify-center">
-        <span class="px-3 py-1 bg-green-50 text-green-800 rounded-full font-bold uppercase text-xs tracking-wider">
-          <%= post.category %>
-        </span>
-        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-        <span>
-          <%= new Date(post.created_at).toLocaleDateString('pt-BR') %>
-        </span>
+    <article class="glass rounded-2xl shadow-soft border border-white/10 overflow-hidden mb-8">
+      <div class="p-6 md:p-10">
+        <h1 class="headline text-3xl md:text-5xl font-bold text-text-main mb-6 leading-tight text-center">
+          <%= post.title %>
+        </h1>
+
+        <div class="flex items-center justify-center gap-2 mb-8 md:mb-12 border-b border-white/10 pb-8">
+          <span class="text-text-meta text-sm italic">Escrito por</span>
+          <span class="font-bold text-text-main text-sm"><%= post.author_email %></span>
+        </div>
+
+        <% if (post.source_url) { %>
+          <div class="mb-8 p-4 bg-bg-card border border-white/10 rounded-lg flex items-start gap-3">
+            <svg class="h-5 w-5 text-primary mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <div>
+              <p class="text-sm text-text-main font-medium">Este artigo refere-se a um conteúdo externo.</p>
+              <a href="<%= post.source_url %>" target="_blank" rel="noreferrer"
+                class="text-primary hover:underline text-sm font-bold mt-1 inline-block">Ler artigo original →</a>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="prose prose-invert max-w-none text-text-main leading-relaxed">
+          <p class="whitespace-pre-wrap"><%= post.content %></p>
+        </div>
+      </div>
+    </article>
+
+    <section class="max-w-3xl mx-auto">
+      <h2 class="headline text-xl text-text-main mb-6 flex items-center gap-2">
+        Comentários
+        <span class="px-2 py-0.5 rounded-full bg-bg-card text-text-meta text-xs font-bold"><%= comments.length %></span>
+      </h2>
+
+      <div class="space-y-6 mb-12">
+        <% comments.forEach(c=> { %>
+          <div class="flex gap-4 group">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-sm">
+                <%= c.author_email ? c.author_email[0].toUpperCase() : '?' %>
+              </div>
+            </div>
+            <div class="flex-grow">
+              <div class="bg-bg-card p-4 rounded-2xl rounded-tl-none shadow-soft border border-white/10">
+                <div class="flex items-baseline justify-between mb-2">
+                  <span class="font-bold text-text-main text-sm"><%= c.author_email || "Anônimo" %></span>
+                  <span class="text-xs text-text-meta"><%= new Date(c.created_at).toLocaleString('pt-BR') %></span>
+                </div>
+                <div class="text-text-main text-sm md:text-base whitespace-pre-wrap leading-relaxed"><%= c.body %></div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
       </div>
 
-      <!-- Editorial Content -->
-      <article class="glass rounded-2xl shadow-soft border border-white/60 overflow-hidden mb-8">
-        <div class="p-6 md:p-12">
-          <h1 class="headline text-3xl md:text-5xl font-bold text-text-main mb-6 leading-tight text-center">
-            <%= post.title %>
-          </h1>
-
-          <!-- Author (Editorial Style) -->
-          <div class="flex items-center justify-center gap-2 mb-8 md:mb-12 border-b border-gray-100 pb-8">
-            <span class="text-text-meta text-sm italic">Escrito por</span>
-            <span class="font-bold text-gray-900 text-sm">
-              <%= post.author_email %>
-            </span>
+      <div class="glass rounded-2xl shadow-soft border border-white/10 p-6 md:p-8">
+        <% if (user) { %>
+          <form method="post" action="/p/<%= post.slug %>/comment" class="space-y-4">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <h3 class="font-bold text-text-main">Deixe seu comentário</h3>
+            <textarea name="body" rows="4"
+              class="w-full bg-bg-card border-white/10 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-bg-surface transition-all text-base"
+              placeholder="Escreva sua opinião..." required></textarea>
+            <div class="flex justify-end">
+              <button class="bg-primary text-black px-8 py-3 rounded-xl font-bold hover:bg-green-600 transition-colors shadow-glow">Publicar Comentário</button>
+            </div>
+          </form>
+        <% } else { %>
+          <div class="text-center py-4">
+            <p class="text-text-main mb-4">Você precisa estar logado para comentar.</p>
+            <a href="/login" class="inline-block px-6 py-2 border border-white/10 rounded-lg text-text-main font-medium hover:bg-bg-surface transition-colors">Fazer Login</a>
           </div>
-
-          <!-- External Source Box -->
-          <% if (post.source_url) { %>
-            <div class="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-lg flex items-start gap-3">
-              <svg class="h-5 w-5 text-blue-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              <div>
-                <p class="text-sm text-blue-900 font-medium">Este artigo refere-se a um conteúdo externo.</p>
-                <a href="<%= post.source_url %>" target="_blank" rel="noreferrer"
-                  class="text-blue-600 hover:underline text-sm font-bold mt-1 inline-block">Ler artigo original
-                  &rarr;</a>
-              </div>
-            </div>
-            <% } %>
-
-              <div class="prose prose-neutral prose-lg max-w-none text-text-main leading-relaxed">
-                <p class="whitespace-pre-wrap font-serif md:font-sans">
-                  <%= post.content %>
-                </p>
-              </div>
-        </div>
-      </article>
-
-      <!-- Comments Section -->
-      <section class="max-w-3xl mx-auto">
-        <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          Comentários
-          <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold">
-            <%= comments.length %>
-          </span>
-        </h2>
-
-        <div class="space-y-6 mb-12">
-          <% comments.forEach(c=> { %>
-            <div class="flex gap-4 group">
-              <div class="flex-shrink-0">
-                <div
-                  class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm">
-                  <%= c.author_email ? c.author_email[0].toUpperCase() : '?' %>
-                </div>
-              </div>
-              <div class="flex-grow">
-                <div class="bg-white p-4 rounded-xl rounded-tl-none shadow-sm border border-white/60">
-                  <div class="flex items-baseline justify-between mb-2">
-                    <span class="font-bold text-gray-900 text-sm">
-                      <%= c.author_email || "Anônimo" %>
-                    </span>
-                    <span class="text-xs text-text-meta">
-                      <%= new Date(c.created_at).toLocaleString('pt-BR') %>
-                    </span>
-                  </div>
-                  <div class="text-text-main text-sm md:text-base whitespace-pre-wrap leading-relaxed">
-                    <%= c.body %>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <% }) %>
-        </div>
-
-        <!-- Comment Form -->
-        <div class="glass rounded-2xl shadow-soft border border-white/60 p-6 md:p-8">
-          <% if (user) { %>
-            <form method="post" action="/p/<%= post.slug %>/comment" class="space-y-4">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-              <h3 class="font-bold text-gray-900">Deixe seu comentário</h3>
-              <textarea name="body" rows="4"
-                class="w-full bg-white/70 border-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-base"
-                placeholder="Escreva sua opinião..." required></textarea>
-              <div class="flex justify-end">
-                <button
-                  class="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-teal-700 transition-colors shadow-glow">Publicar
-                  Comentário</button>
-              </div>
-            </form>
-            <% } else { %>
-              <div class="text-center py-4">
-                <p class="text-text-main mb-4">Você precisa estar logado para comentar.</p>
-                <a href="/login"
-                  class="inline-block px-6 py-2 border border-gray-300 rounded-lg text-text-main font-medium hover:bg-white/70 transition-colors">Fazer
-                  Login</a>
-              </div>
-              <% } %>
-        </div>
-      </section>
-
-    </main>
+        <% } %>
+      </div>
+    </section>
+  </main>
 </body>
 
 </html>
-
-
-
-

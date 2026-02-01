@@ -3,10 +3,10 @@
 <title>SQMCC</title>
 <link rel="icon" type="image/png" href="/images/favicon.png" />
 
-<!-- Google Fonts: Fraunces + Manrope -->
+<!-- Google Fonts: Sora + Inter -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- TailwindCSS -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -15,24 +15,26 @@
         theme: {
             extend: {
                 colors: {
-                    primary: '#0F766E',
-                    secondary: '#FDE68A',
-                    accent: '#FB7185',
-                    'bg-main': '#F8F4EE',
-                    'text-main': '#1F2937',
-                    'text-meta': '#6B7280',
+                    primary: '#16C784',
+                    secondary: '#0B3B2E',
+                    accent: '#0E9F6E',
+                    'bg-main': '#0B0D0E',
+                    'bg-surface': '#121416',
+                    'bg-card': '#16181B',
+                    'text-main': '#E6E7EA',
+                    'text-meta': '#A1A6AD',
                 },
                 fontFamily: {
-                    sans: ['Manrope', 'sans-serif'],
-                    serif: ['Fraunces', 'serif'],
+                    sans: ['Inter', 'sans-serif'],
+                    display: ['Sora', 'sans-serif'],
                 },
                 boxShadow: {
-                    'soft': '0 6px 24px rgba(15, 23, 42, 0.08)',
-                    'glow': '0 10px 30px rgba(15, 118, 110, 0.18)',
+                    'soft': '0 10px 30px rgba(0,0,0,0.35)',
+                    'glow': '0 0 0 1px rgba(22,199,132,0.35), 0 12px 40px rgba(22,199,132,0.12)',
                 },
                 borderRadius: {
-                    'xl': '14px',
-                    '2xl': '20px',
+                    'xl': '16px',
+                    '2xl': '24px',
                 }
             }
         }
@@ -41,51 +43,28 @@
 
 <style>
     :root {
-        --bg: #F8F4EE;
-        --bg-2: #EDF4F2;
-        --ink: #1F2937;
-        --muted: #6B7280;
-        --teal: #0F766E;
-        --sand: #FDE68A;
-        --coral: #FB7185;
+        --bg: #0B0D0E;
+        --surface: #121416;
+        --card: #16181B;
+        --ink: #E6E7EA;
+        --muted: #A1A6AD;
+        --green: #16C784;
+        --green-2: #0E9F6E;
     }
     body {
-        font-family: 'Manrope', sans-serif;
+        font-family: 'Inter', sans-serif;
         color: var(--ink);
-        background: radial-gradient(900px 500px at 10% -10%, #E9F5F2 0%, transparent 60%),
-                    radial-gradient(800px 500px at 90% 10%, #FCE7E0 0%, transparent 60%),
-                    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+        background: radial-gradient(900px 500px at 10% -10%, rgba(22,199,132,0.12) 0%, transparent 60%),
+                    radial-gradient(800px 500px at 90% 10%, rgba(14,159,110,0.10) 0%, transparent 60%),
+                    var(--bg);
         min-height: 100vh;
-    }
-    body::before,
-    body::after {
-        content: "";
-        position: fixed;
-        z-index: 0;
-        filter: blur(40px);
-        opacity: 0.25;
-        pointer-events: none;
-    }
-    body::before {
-        width: 320px;
-        height: 320px;
-        background: radial-gradient(circle, var(--teal), transparent 60%);
-        top: 10%;
-        left: -80px;
-    }
-    body::after {
-        width: 360px;
-        height: 360px;
-        background: radial-gradient(circle, var(--coral), transparent 60%);
-        bottom: -60px;
-        right: -80px;
     }
     main, nav {
         position: relative;
         z-index: 1;
     }
     h1, h2, h3, .headline {
-        font-family: 'Fraunces', serif;
+        font-family: 'Sora', sans-serif;
         letter-spacing: -0.01em;
     }
     .page-enter {
@@ -95,13 +74,9 @@
         from { opacity: 0; transform: translateY(8px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    .btn-primary {
-        box-shadow: 0 12px 30px rgba(15, 118, 110, 0.25);
-    }
     .glass {
-        background: rgba(255, 255, 255, 0.75);
+        background: rgba(18, 20, 22, 0.8);
         backdrop-filter: blur(10px);
     }
 </style>
-
 

@@ -11,18 +11,18 @@
         <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
 
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Painel de Moderação</h1>
+                <h1 class="text-3xl font-bold text-text-main">Painel de Moderação</h1>
                 <p class="text-text-meta mt-1">Gerencie usuários e conteúdo da comunidade.</p>
             </div>
 
             <!-- Tabs -->
-            <div class="flex items-center gap-1 bg-white p-1 rounded-xl shadow-sm border border-white/60 mb-6 w-fit">
+            <div class="flex items-center gap-1 bg-bg-card p-1 rounded-xl shadow-sm border border-white/60 mb-6 w-fit">
                 <a href="?tab=users"
-                    class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'users' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-white/70' %>">Usuários</a>
+                    class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'users' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-bg-card/70' %>">Usuários</a>
                 <a href="?tab=topics"
-                    class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'topics' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-white/70' %>">Tópicos</a>
+                    class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'topics' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-bg-card/70' %>">Tópicos</a>
                 <a href="?tab=comments"
-                    class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'comments' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-white/70' %>">Comentários</a>
+                    class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'comments' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-bg-card/70' %>">Comentários</a>
             </div>
 
             <!-- Content Area -->
@@ -32,11 +32,11 @@
                         <div class="glass rounded-2xl p-6 border border-white/60 shadow-sm">
                             <div class="flex items-center gap-4 mb-4">
                                 <div
-                                    class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 font-bold">
+                                    class="w-12 h-12 bg-bg-surface rounded-full flex items-center justify-center text-text-meta font-bold">
                                     <%= u.email[0].toUpperCase() %>
                                 </div>
                                 <div>
-                                    <div class="font-bold text-gray-900">
+                                    <div class="font-bold text-text-main">
                                         <%= u.email %>
                                     </div>
                                     <div class="text-xs text-text-meta">ID: <%= u.id %> • <%= u.role %>
@@ -45,7 +45,7 @@
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 <a href="/u/<%= u.id %>"
-                                    class="px-3 py-1 bg-white/70 text-text-main text-xs font-medium rounded-lg hover:bg-gray-100 border border-gray-200">Ver
+                                    class="px-3 py-1 bg-bg-card/70 text-text-main text-xs font-medium rounded-lg hover:bg-bg-surface border border-white/10">Ver
                                     Perfil</a>
                                 <form action="/admin/ban/<%= u.id %>" method="POST"
                                     onsubmit="return confirm('Tem certeza que quer banir este usuário?')">
@@ -70,7 +70,7 @@
                                             class="absolute top-4 right-4 text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">
                                             <%= t.category %>
                                         </span>
-                                        <h3 class="font-bold text-gray-900 pr-12 mb-2 line-clamp-1">
+                                        <h3 class="font-bold text-text-main pr-12 mb-2 line-clamp-1">
                                             <%= t.title %>
                                         </h3>
                                         <p class="text-sm text-text-meta line-clamp-2 mb-4">
@@ -107,7 +107,7 @@
                                                                 Date(c.created_at).toLocaleDateString() %>
                                                     </div>
                                                     <div
-                                                        class="text-sm text-gray-800 bg-white/70 p-3 rounded-lg border border-white/60 mb-3">
+                                                        class="text-sm text-text-main bg-bg-card/70 p-3 rounded-lg border border-white/60 mb-3">
                                                         <%= c.body %>
                                                     </div>
                                                     <div class="flex justify-end gap-2">
@@ -131,6 +131,8 @@
 </body>
 
 </html>
+
+
 
 
 

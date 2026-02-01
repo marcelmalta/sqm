@@ -8,125 +8,87 @@
 <body class="page-enter bg-bg-main text-text-main flex flex-col min-h-screen">
   <%- include("partials/nav", { user }) %>
 
-    <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8">
+  <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8">
+    <div class="flex items-center gap-2 text-sm text-text-meta mb-6">
+      <a href="/forum" class="hover:text-primary hover:underline">Fórum</a>
+      <span class="text-white/20">›</span>
+      <span class="text-primary font-medium"><%= topic.category %></span>
+    </div>
 
-      <!-- Breadcrumb / Meta -->
-      <div class="flex items-center gap-2 text-sm text-text-meta mb-6">
-        <a href="/forum" class="hover:text-primary hover:underline">Fórum</a>
-        <svg class="h-4 w-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd"
-            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-            clip-rule="evenodd" />
-        </svg>
-        <span class="text-primary font-medium">
-          <%= topic.category %>
-        </span>
+    <article class="glass rounded-2xl shadow-soft border border-white/10 overflow-hidden mb-8">
+      <div class="p-6 md:p-8">
+        <h1 class="headline text-2xl md:text-3xl font-bold text-text-main mb-4 leading-tight"><%= topic.title %></h1>
+
+        <div class="flex items-center gap-3 pb-6 border-b border-white/10 mb-6">
+          <div class="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-lg">
+            <%= topic.author_email ? topic.author_email[0].toUpperCase() : '?' %>
+          </div>
+          <div>
+            <div class="font-medium text-text-main text-sm"><%= topic.author_email %></div>
+            <div class="text-xs text-text-meta"><%= new Date(topic.created_at).toLocaleString('pt-BR') %></div>
+          </div>
+        </div>
+
+        <div class="prose prose-invert max-w-none text-text-main leading-relaxed">
+          <p class="whitespace-pre-wrap"><%= topic.body %></p>
+        </div>
+      </div>
+    </article>
+
+    <section class="max-w-3xl mx-auto">
+      <h2 class="headline text-xl text-text-main mb-6 flex items-center gap-2">
+        Comentários
+        <span class="px-2 py-0.5 rounded-full bg-bg-card text-text-meta text-xs font-bold"><%= comments.length %></span>
+      </h2>
+
+      <div class="space-y-6 mb-12">
+        <% comments.forEach(c=> { %>
+          <div class="flex gap-4 group">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-sm">
+                <%= c.author_email ? c.author_email[0].toUpperCase() : '?' %>
+              </div>
+            </div>
+            <div class="flex-grow">
+              <div class="bg-bg-card p-4 rounded-2xl rounded-tl-none shadow-soft border border-white/10">
+                <div class="flex items-baseline justify-between mb-2">
+                  <span class="font-bold text-text-main text-sm"><%= c.author_email || "Anônimo" %></span>
+                  <span class="text-xs text-text-meta"><%= new Date(c.created_at).toLocaleString('pt-BR') %></span>
+                </div>
+                <div class="text-text-main text-sm md:text-base whitespace-pre-wrap leading-relaxed"><%= c.body %></div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
       </div>
 
-      <!-- Topic Content -->
-      <article class="glass rounded-2xl shadow-soft border border-white/60 overflow-hidden mb-8">
-        <div class="p-6 md:p-8">
-          <h1 class="headline text-2xl md:text-3xl font-bold text-text-main mb-4 leading-tight">
-            <%= topic.title %>
-          </h1>
-
-          <div class="flex items-center gap-3 pb-6 border-b border-gray-100 mb-6">
-            <div
-              class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
-              <%= topic.author_email ? topic.author_email[0].toUpperCase() : '?' %>
-            </div>
-            <div>
-              <div class="font-medium text-gray-900 text-sm">
-                <%= topic.author_email %>
+      <div class="sticky bottom-0 md:static bg-bg-main pt-4 pb-6 md:pb-0">
+        <% if (user) { %>
+          <div class="glass rounded-2xl shadow-soft border border-white/10 p-4">
+            <form method="post" action="/t/<%= topic.id %>/comment" class="flex flex-col gap-3">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-full bg-primary/15 flex-shrink-0 flex items-center justify-center text-primary font-bold text-xs">
+                  <%= user.email[0].toUpperCase() %>
+                </div>
+                <textarea name="body" rows="1"
+                  class="flex-grow bg-bg-card border border-white/10 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-bg-surface transition-all resize-none min-h-[50px]"
+                  placeholder="Escreva um comentário..." required onfocus="this.rows=3"></textarea>
               </div>
-              <div class="text-xs text-text-meta flex items-center gap-1">
-                <%= new Date(topic.created_at).toLocaleString('pt-BR') %>
+              <div class="flex justify-end">
+                <button class="bg-primary text-black px-6 py-2 rounded-lg font-medium hover:bg-green-600 transition-colors shadow-glow text-sm">Enviar comentário</button>
               </div>
-            </div>
+            </form>
           </div>
-
-          <div class="prose prose-neutral prose-lg max-w-none text-text-main leading-relaxed">
-            <p class="whitespace-pre-wrap">
-              <%= topic.body %>
-            </p>
+        <% } else { %>
+          <div class="bg-bg-card rounded-2xl p-6 text-center border border-white/10">
+            <p class="text-text-main font-medium mb-2">Quer participar da discussão?</p>
+            <a href="/login" class="text-primary font-bold hover:underline">Faça login</a> para deixar seu comentário.
           </div>
-        </div>
-      </article>
-
-      <!-- Comments Section -->
-      <section class="max-w-3xl mx-auto">
-        <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          Comentários
-          <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold">
-            <%= comments.length %>
-          </span>
-        </h2>
-
-        <div class="space-y-6 mb-12">
-          <% comments.forEach(c=> { %>
-            <div class="flex gap-4 group">
-              <div class="flex-shrink-0">
-                <div
-                  class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm">
-                  <%= c.author_email ? c.author_email[0].toUpperCase() : '?' %>
-                </div>
-              </div>
-              <div class="flex-grow">
-                <div class="bg-white p-4 rounded-xl rounded-tl-none shadow-sm border border-white/60">
-                  <div class="flex items-baseline justify-between mb-2">
-                    <span class="font-bold text-gray-900 text-sm">
-                      <%= c.author_email || "Anônimo" %>
-                    </span>
-                    <span class="text-xs text-text-meta">
-                      <%= new Date(c.created_at).toLocaleString('pt-BR') %>
-                    </span>
-                  </div>
-                  <div class="text-text-main text-sm md:text-base whitespace-pre-wrap leading-relaxed">
-                    <%= c.body %>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <% }) %>
-        </div>
-
-        <!-- Comment Form -->
-        <div class="sticky bottom-0 md:static bg-bg-main pt-4 pb-6 md:pb-0">
-          <% if (user) { %>
-            <div class="glass rounded-2xl shadow-lg md:shadow-soft border border-white/60 p-4 sticky-form-container">
-              <form method="post" action="/t/<%= topic.id %>/comment" class="flex flex-col gap-3">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <div class="flex items-start gap-3">
-                  <div
-                    class="w-8 h-8 rounded-full bg-primary/10 flex-shrink-0 flex items-center justify-center text-primary font-bold text-xs">
-                    <%= user.email[0].toUpperCase() %>
-                  </div>
-                  <textarea name="body" rows="1"
-                    class="flex-grow bg-white/70 border-0 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-white transition-all resize-none min-h-[50px]"
-                    placeholder="Escreva um comentário..." required onfocus="this.rows=3"></textarea>
-                </div>
-                <div class="flex justify-end">
-                  <button
-                    class="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-teal-700 transition-colors shadow-sm text-sm">Enviar
-                    Comentário</button>
-                </div>
-              </form>
-            </div>
-            <% } else { %>
-              <div class="bg-primary/5 rounded-xl p-6 text-center border border-primary/10">
-                <p class="text-text-main font-medium mb-2">Quer participar da discussão?</p>
-                <a href="/login" class="text-primary font-bold hover:underline">Faça login</a> para deixar seu
-                comentário.
-              </div>
-              <% } %>
-        </div>
-      </section>
-
-    </main>
+        <% } %>
+      </div>
+    </section>
+  </main>
 </body>
 
 </html>
-
-
-
-

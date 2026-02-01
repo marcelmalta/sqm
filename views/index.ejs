@@ -8,173 +8,93 @@
 <body class="page-enter bg-bg-main text-text-main flex flex-col min-h-screen">
   <%- include("partials/nav", { user }) %>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-      <!-- Main Content -->
-      <div class="lg:col-span-8 space-y-8">
-
-        <!-- Hero -->
-        <section class="glass rounded-2xl border border-white/60 shadow-soft p-6 md:p-10 relative overflow-hidden">
-          <div class="absolute -top-10 -right-10 w-40 h-40 bg-secondary/40 rounded-full blur-3xl"></div>
-          <div class="absolute -bottom-12 -left-12 w-52 h-52 bg-primary/20 rounded-full blur-3xl"></div>
-          <div class="relative flex flex-col md:flex-row items-center gap-8">
-            <div class="flex-1">
-              <span class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary bg-white/70 border border-white/60 px-3 py-1 rounded-full">
-                Comunidade & conhecimento
-              </span>
-              <h1 class="headline text-3xl md:text-4xl mt-4 text-text-main">
-                Informação confiável e apoio real para Sensibilidade Química Múltipla
-              </h1>
-              <p class="text-text-meta mt-3 max-w-2xl">
-                Descubra relatos, pesquisas e práticas seguras. Um espaço curado para aprender, conversar e agir com responsabilidade.
-              </p>
-              <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                <a href="/register" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-primary text-white font-semibold shadow-glow hover:bg-teal-700 transition-colors">
-                  Participar agora
-                </a>
-                <a href="/forum" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-white/70 border border-white/60 text-text-main font-semibold hover:bg-white transition-colors">
-                  Ir para o Fórum
-                </a>
-              </div>
-            </div>
-            <div class="flex-shrink-0">
-              <img src="/images/logo-badge.png" alt="SQM Brasil" class="w-36 md:w-44 h-auto drop-shadow" />
-            </div>
+  <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <section class="glass rounded-2xl border border-white/10 shadow-soft p-6 md:p-10">
+      <div class="flex flex-col md:flex-row items-center gap-8">
+        <div class="flex-1">
+          <div class="inline-flex items-center gap-3 bg-bg-card border border-white/10 rounded-full px-3 py-1 text-xs text-text-meta">
+            <span class="w-2 h-2 rounded-full bg-primary"></span>
+            SQM Brasil · Comunidade + Loja
           </div>
-        </section>
-
-        <!-- Search & Filters -->
-        <section class="space-y-4">
-          <form action="/" method="GET" class="relative">
-            <input type="text" name="q" placeholder="Buscar posts, artigos..." value="<%= q %>"
-              class="w-full h-12 pl-12 pr-4 rounded-xl border-none shadow-soft focus:ring-2 focus:ring-primary focus:outline-none bg-white text-text-main placeholder-gray-400 font-medium">
-            <div class="absolute left-4 top-3.5 text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <% if (cat) { %><input type="hidden" name="cat" value="<%= cat %>">
-              <% } %>
-          </form>
-
-          <!-- Category Pills (Horizontal Scroll) -->
-          <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            <a href="/?q=<%= q %>"
-              class="whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide transition-colors <%= !cat ? 'bg-primary text-white shadow-glow' : 'bg-white text-text-meta hover:bg-white/70 border border-white/60' %>">
-              Todas
-            </a>
-            <% categories.forEach(c=> { %>
-              <a href="/?cat=<%= c.category %>&q=<%= q %>"
-                class="whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide transition-colors <%= cat === c.category ? 'bg-primary text-white shadow-glow' : 'bg-white text-text-meta hover:bg-white/70 border border-white/60' %>">
-                <%= c.category %>
-              </a>
-              <% }) %>
+          <h1 class="headline text-3xl md:text-4xl mt-4 text-text-main">SQM Brasil — Comunidade e Loja</h1>
+          <p class="text-text-meta mt-3 max-w-2xl">
+            Um espaço para pessoas com Sensibilidade Química Múltipla (SQM) encontrarem informação, apoio e produtos selecionados.
+          </p>
+          <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            <a href="/" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-primary text-black font-semibold shadow-glow hover:bg-green-600 transition-colors">Ver produtos</a>
+            <a href="/forum" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-bg-card border border-white/10 text-text-main font-semibold hover:bg-bg-surface transition-colors">Acessar comunidade</a>
           </div>
-        </section>
-
-        <!-- Content Grid -->
-        <section>
-          <div class="flex items-center justify-between mb-6">
-            <h1 class="headline text-2xl md:text-3xl font-bold text-text-main">
-              <% if(q) { %>Resultados para "<%= q %>"<% } else if(cat) { %>Categoria: <%= cat %>
-                      <% } else { %>Últimos posts<% } %>
-            </h1>
-          </div>
-
-          <% if (!posts.length) { %>
-            <div class="p-8 glass rounded-2xl border border-white/60 text-center shadow-soft">
-              <p class="text-text-meta">Nenhum post encontrado. <% if(user) { %>Que tal <a href="/admin/new-post"
-                    class="text-primary hover:underline">criar um</a>?<% } %>
-              </p>
-            </div>
-            <% } %>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <% posts.forEach(p=> { %>
-                  <a href="/p/<%= p.slug %>"
-                    class="group glass border border-white/60 rounded-2xl p-6 hover:shadow-glow transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
-                    <div class="flex items-center justify-between mb-3">
-                      <span
-                        class="px-2.5 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider rounded-full">
-                        <%= p.category %>
-                      </span>
-                      <span class="text-xs text-text-meta">
-                        <%= new Date(p.created_at).toLocaleDateString('pt-BR') %>
-                      </span>
-                    </div>
-                    <h3 class="headline text-xl font-bold text-text-main group-hover:text-primary mb-2 line-clamp-2">
-                      <%= p.title %>
-                    </h3>
-                    <p class="text-text-meta text-sm line-clamp-3 mb-4 flex-grow">
-                      <%= p.excerpt %>
-                    </p>
-
-                    <div class="flex items-center gap-2 pt-4 border-t border-white/60 mt-auto">
-                      <!-- Avatar Placeholder -->
-                      <div class="w-7 h-7 rounded-full bg-primary/10 flex-shrink-0 flex items-center justify-center text-primary text-xs font-bold">
-                        <%= p.author_email ? p.author_email[0].toUpperCase() : '?' %>
-                      </div>
-                      <span class="text-xs text-text-meta font-medium truncate">
-                        <%= p.author_email %>
-                      </span>
-                    </div>
-                  </a>
-                  <% }) %>
-              </div>
-        </section>
-
-        <div class="text-center pt-8">
-          <button
-            class="px-8 py-3 bg-white border border-gray-200 text-text-main font-medium rounded-xl hover:bg-white/70 transition-colors shadow-sm">Carregar
-            mais</button>
+        </div>
+        <div class="flex-shrink-0">
+          <img src="/images/logo-badge.png" alt="SQM Brasil" class="w-32 md:w-40 h-auto" />
         </div>
       </div>
+    </section>
 
-      <!-- Sidebar (Desktop) -->
-      <aside class="hidden lg:block lg:col-span-4 space-y-6">
-        <!-- About Box -->
-        <div class="glass rounded-2xl p-6 border border-white/60 shadow-soft">
-          <div class="flex items-center gap-3 mb-4">
-            <img src="/images/logo-badge.png" alt="SQM Brasil" class="w-10 h-10 rounded-full" />
-            <h3 class="font-bold text-lg text-text-main">SQM Brasil</h3>
-          </div>
-          <p class="text-sm text-text-meta leading-relaxed mb-4">
-            Comunidade dedicada a compartilhar conhecimento, tratamentos e notícias sobre a Sensibilidade Química
-            Múltipla.
-          </p>
-          <a href="/register"
-            class="block w-full text-center py-2 bg-secondary/20 text-green-800 font-bold rounded-lg hover:bg-secondary/30 transition-colors text-sm">
-            Junte-se a nós
+    <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="glass rounded-2xl border border-white/10 shadow-soft p-5">
+        <h3 class="headline text-lg text-text-main">Conteúdo confiável</h3>
+        <p class="text-text-meta mt-2">Publicações oficiais e tópicos da comunidade, com moderação.</p>
+      </div>
+      <div class="glass rounded-2xl border border-white/10 shadow-soft p-5">
+        <h3 class="headline text-lg text-text-main">Loja com foco em sensíveis</h3>
+        <p class="text-text-meta mt-2">Catálogo organizado e fácil de comprar (MVP comercial).</p>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <form action="/" method="GET" class="relative">
+        <input type="text" name="q" placeholder="Buscar posts, artigos..." value="<%= q %>"
+          class="w-full h-12 pl-12 pr-4 rounded-xl border border-white/10 bg-bg-card text-text-main placeholder-text-meta focus:ring-2 focus:ring-primary focus:outline-none">
+        <div class="absolute left-4 top-3.5 text-text-meta">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <% if (cat) { %><input type="hidden" name="cat" value="<%= cat %>"><% } %>
+      </form>
+
+      <div class="flex gap-2 overflow-x-auto pb-2 mt-4">
+        <a href="/?q=<%= q %>"
+          class="whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wide transition-colors <%= !cat ? 'bg-primary text-black shadow-glow' : 'bg-bg-card text-text-meta border border-white/10' %>">Todas</a>
+        <% categories.forEach(c=> { %>
+          <a href="/?cat=<%= c.category %>&q=<%= q %>"
+            class="whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wide transition-colors <%= cat === c.category ? 'bg-primary text-black shadow-glow' : 'bg-bg-card text-text-meta border border-white/10' %>"><%= c.category %></a>
+        <% }) %>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="headline text-2xl text-text-main"><% if(q) { %>Resultados para "<%= q %>"<% } else if(cat) { %>Categoria: <%= cat %><% } else { %>Últimos posts<% } %></h2>
+      </div>
+
+      <% if (!posts.length) { %>
+        <div class="glass rounded-2xl border border-white/10 text-center p-6">
+          <p class="text-text-meta">Nenhum post encontrado. <% if(user) { %>Que tal <a href="/admin/new-post" class="text-primary hover:underline">criar um</a>?<% } %></p>
+        </div>
+      <% } %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <% posts.forEach(p=> { %>
+          <a href="/p/<%= p.slug %>" class="group glass rounded-2xl border border-white/10 p-5 hover:shadow-glow transition-all duration-300 hover:-translate-y-1">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary uppercase tracking-wide"><%= p.category %></span>
+              <span class="text-xs text-text-meta"><%= new Date(p.created_at).toLocaleDateString('pt-BR') %></span>
+            </div>
+            <h3 class="headline text-lg text-text-main group-hover:text-primary line-clamp-2"><%= p.title %></h3>
+            <p class="text-text-meta text-sm line-clamp-3 mt-2"><%= p.excerpt %></p>
+            <div class="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">
+              <div class="w-7 h-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold">
+                <%= p.author_email ? p.author_email[0].toUpperCase() : '?' %>
+              </div>
+              <span class="text-xs text-text-meta font-medium truncate"><%= p.author_email %></span>
+            </div>
           </a>
-        </div>
-
-        <!-- Popular Categories -->
-        <div class="glass rounded-2xl p-6 border border-white/60 shadow-soft">
-          <h3 class="font-bold text-lg text-text-main mb-4">Categorias Populares</h3>
-          <ul class="space-y-3">
-            <% categories.slice(0, 5).forEach(c=> { %>
-              <li>
-                <a href="/?cat=<%= c.category %>"
-                  class="flex items-center justify-between text-sm text-text-meta hover:text-primary group">
-                  <span class="group-hover:translate-x-1 transition-transform">
-                    <%= c.category %>
-                  </span>
-                  <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full text-xs font-medium">
-                    <%= c.n %>
-                  </span>
-                </a>
-              </li>
-              <% }) %>
-          </ul>
-        </div>
-      </aside>
-
-    </main>
+        <% }) %>
+      </div>
+    </section>
+  </main>
 </body>
 
 </html>
-
-
-
