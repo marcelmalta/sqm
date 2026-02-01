@@ -44,36 +44,72 @@ router.get("/", async (req, res, next) => {
       .map(([category, n]) => ({ category, n }))
       .sort((a, b) => b.n - a.n || a.category.localeCompare(b.category));
 
-    const products = [
-      {
-        id: "spray-nasal",
-        name: "Spray nasal hipoalergênico",
-        price: "R$ 39,90",
-        summary: "Ajuda no conforto respiratório diário (demo).",
-        details: "Fórmula suave, sem fragrância e sem álcool. Indicado para uso diário em ambientes secos."
-      },
-      {
-        id: "vitamina-d3-k2",
-        name: "Vitamina D3 + K2",
-        price: "R$ 58,90",
-        summary: "Suporte básico para rotina de suplementação (demo).",
-        details: "Cápsulas de fácil digestão. Consulte orientação profissional antes de iniciar."
-      },
-      {
-        id: "detergente-neutro",
-        name: "Detergente neutro sem perfume",
-        price: "R$ 22,90",
-        summary: "Limpeza leve para peles e vias sensíveis (demo).",
-        details: "Sem corantes e sem fragrância. Ideal para rotina doméstica com sensibilidade."
-      },
-      {
-        id: "mascara-reutilizavel",
-        name: "Máscara reutilizável com filtro",
-        price: "R$ 29,90",
-        summary: "Proteção confortável para o dia a dia (demo).",
-        details: "Material respirável e ajuste ergonômico. Troque o filtro regularmente."
-      }
-    ];
+    let products = [];
+    const { data: productsData, error: productsError } = await supabase
+      .from("products")
+      .select("id, slug, name, summary, details, price_cents, currency, image_url")
+      .eq("active", true)
+      .order("created_at", { ascending: false })
+      .limit(8);
+
+    if (productsError && productsError.code !== "PGRST205") {
+      throw productsError;
+    }
+
+    if (productsData && productsData.length) {
+      const formatPrice = (cents, currency) => {
+        const value = (cents || 0) / 100;
+        return new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: currency || "BRL"
+        }).format(value);
+      };
+
+      products = productsData.map(p => ({
+        id: p.id,
+        slug: p.slug,
+        name: p.name,
+        price: formatPrice(p.price_cents, p.currency),
+        summary: p.summary,
+        details: p.details || "Sem descrição adicional.",
+        image_url: p.image_url || "/images/logo-badge.png"
+      }));
+    } else {
+      products = [
+        {
+          id: "spray-nasal",
+          name: "Spray nasal hipoalergênico",
+          price: "R$ 39,90",
+          summary: "Ajuda no conforto respiratório diário (demo).",
+          details: "Fórmula suave, sem fragrância e sem álcool. Indicado para uso diário em ambientes secos.",
+          image_url: "/images/logo-badge.png"
+        },
+        {
+          id: "vitamina-d3-k2",
+          name: "Vitamina D3 + K2",
+          price: "R$ 58,90",
+          summary: "Suporte básico para rotina de suplementação (demo).",
+          details: "Cápsulas de fácil digestão. Consulte orientação profissional antes de iniciar.",
+          image_url: "/images/logo-badge.png"
+        },
+        {
+          id: "detergente-neutro",
+          name: "Detergente neutro sem perfume",
+          price: "R$ 22,90",
+          summary: "Limpeza leve para peles e vias sensíveis (demo).",
+          details: "Sem corantes e sem fragrância. Ideal para rotina doméstica com sensibilidade.",
+          image_url: "/images/logo-badge.png"
+        },
+        {
+          id: "mascara-reutilizavel",
+          name: "Máscara reutilizável com filtro",
+          price: "R$ 29,90",
+          summary: "Proteção confortável para o dia a dia (demo).",
+          details: "Material respirável e ajuste ergonômico. Troque o filtro regularmente.",
+          image_url: "/images/logo-badge.png"
+        }
+      ];
+    }
 
     res.render("index", { user: req.session.user, posts, categories, q, cat, products });
   } catch (err) {
