@@ -104,7 +104,7 @@ router.get("/auth/callback", async (req, res, next) => {
   try {
     const code = req.query.code;
     if (!code) {
-      return res.status(400).render("login", { user: null, error: "Codigo invalido.", success: null });
+      return res.render("auth-callback", { user: null, error: null, success: null });
     }
 
     const client = createSupabaseClient();
@@ -112,6 +112,43 @@ router.get("/auth/callback", async (req, res, next) => {
     if (error) throw error;
 
     const authUser = data.user;
+    const profile = await getOrCreateProfile({
+      email: authUser.email,
+      authUserId: authUser.id,
+      name: authUser.user_metadata?.full_name || authUser.user_metadata?.name || null
+    });
+
+    req.session.user = { id: profile.id, email: profile.email, role: profile.role };
+    res.redirect("/");
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/auth/callback", async (req, res, next) => {
+  try {
+    const schema = z.object({
+      access_token: z.string().min(10),
+      refresh_token: z.string().min(10)
+    });
+    const parsed = schema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).render("login", { user: null, error: "Tokens invalidos.", success: null });
+    }
+
+    const client = createSupabaseClient();
+    const { error: sessionError } = await client.auth.setSession({
+      access_token: parsed.data.access_token,
+      refresh_token: parsed.data.refresh_token
+    });
+    if (sessionError) throw sessionError;
+
+    const { data: userData, error: userError } = await client.auth.getUser();
+    if (userError || !userData?.user) {
+      return res.status(400).render("login", { user: null, error: "Falha ao validar usuario.", success: null });
+    }
+
+    const authUser = userData.user;
     const profile = await getOrCreateProfile({
       email: authUser.email,
       authUserId: authUser.id,

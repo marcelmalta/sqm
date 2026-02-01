@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+<head>
+  <%- include("partials/head") %>
+</head>
+
+<body class="page-enter bg-bg-main text-text-main flex flex-col min-h-screen">
+  <%- include("partials/nav", { user: null }) %>
+
+  <main class="flex-grow flex items-center justify-center p-4">
+    <div class="glass rounded-2xl shadow-soft border border-white/10 p-8 w-full max-w-md text-center">
+      <h1 class="headline text-2xl font-bold text-text-main">Finalizando login...</h1>
+      <p class="text-text-meta mt-2">Aguarde alguns segundos.</p>
+
+      <form id="callback-form" action="/auth/callback" method="POST" class="hidden">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="access_token" id="access_token">
+        <input type="hidden" name="refresh_token" id="refresh_token">
+      </form>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      if (!window.location.hash) {
+        window.location.replace('/login');
+        return;
+      }
+      var params = new URLSearchParams(window.location.hash.substring(1));
+      var accessToken = params.get('access_token');
+      var refreshToken = params.get('refresh_token');
+      if (!accessToken || !refreshToken) {
+        window.location.replace('/login');
+        return;
+      }
+      document.getElementById('access_token').value = accessToken;
+      document.getElementById('refresh_token').value = refreshToken;
+      document.getElementById('callback-form').submit();
+    })();
+  </script>
+</body>
+
+</html>
