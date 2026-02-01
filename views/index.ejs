@@ -52,7 +52,7 @@
         <% products.forEach(p=> { %>
           <button type="button"
             class="group text-left glass rounded-2xl border border-white/10 p-4 hover:shadow-glow transition-all duration-300 hover:-translate-y-1"
-            data-product='{"id":"<%= p.id %>","name":"<%= p.name %>","price":"<%= p.price %>","summary":"<%= p.summary %>","details":"<%= p.details %>","image_url":"<%= p.image_url %>"}'>
+            data-product='{"id":"<%= p.id %>","name":"<%= p.name %>","price":"<%= p.price %>","price_cents":<%= p.price_cents || 0 %>,"summary":"<%= p.summary %>","details":"<%= p.details %>","image_url":"<%= p.image_url %>"}'>
             <div class="flex items-center justify-between">
               <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary uppercase tracking-wide">Produto</span>
               <span class="text-xs text-text-meta">demo</span>
@@ -139,7 +139,8 @@
         <div class="mt-4 text-primary font-semibold" id="modal-price"></div>
         <p class="text-text-meta mt-3" id="modal-details"></p>
         <div class="mt-6 flex flex-col sm:flex-row gap-3">
-          <button class="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-black font-semibold shadow-glow hover:bg-green-600 transition-colors">
+          <button id="modal-add"
+            class="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-black font-semibold shadow-glow hover:bg-green-600 transition-colors">
             Adicionar ao carrinho
           </button>
           <button id="modal-close-2" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-bg-card border border-white/10 text-text-main hover:bg-bg-surface transition-colors">
@@ -158,10 +159,13 @@
       const price = document.getElementById('modal-price');
       const details = document.getElementById('modal-details');
       const image = document.getElementById('modal-image');
+      const addBtn = document.getElementById('modal-add');
+      let currentProduct = null;
       const close1 = document.getElementById('modal-close');
       const close2 = document.getElementById('modal-close-2');
 
       function openModal(data) {
+        currentProduct = data;
         title.textContent = data.name;
         summary.textContent = data.summary;
         price.textContent = data.price;
@@ -181,6 +185,30 @@
           const data = JSON.parse(btn.getAttribute('data-product'));
           openModal(data);
         });
+      });
+
+      function addToCart(product) {
+        const cart = JSON.parse(localStorage.getItem('sqm_cart') || '[]');
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) {
+          existing.qty += 1;
+        } else {
+          cart.push({
+            id: product.id,
+            name: product.name,
+            price_cents: product.price_cents || null,
+            price: product.price,
+            image_url: product.image_url || "/images/logo-badge.png",
+            qty: 1
+          });
+        }
+        localStorage.setItem('sqm_cart', JSON.stringify(cart));
+      }
+
+      addBtn.addEventListener('click', () => {
+        if (!currentProduct) return;
+        addToCart(currentProduct);
+        closeModal();
       });
 
       close1.addEventListener('click', closeModal);

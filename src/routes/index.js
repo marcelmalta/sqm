@@ -70,6 +70,7 @@ router.get("/", async (req, res, next) => {
         slug: p.slug,
         name: p.name,
         price: formatPrice(p.price_cents, p.currency),
+        price_cents: p.price_cents,
         summary: p.summary,
         details: p.details || "Sem descrição adicional.",
         image_url: p.image_url || "/images/logo-badge.png"
@@ -80,6 +81,7 @@ router.get("/", async (req, res, next) => {
           id: "spray-nasal",
           name: "Spray nasal hipoalergênico",
           price: "R$ 39,90",
+          price_cents: 3990,
           summary: "Ajuda no conforto respiratório diário (demo).",
           details: "Fórmula suave, sem fragrância e sem álcool. Indicado para uso diário em ambientes secos.",
           image_url: "/images/logo-badge.png"
@@ -88,6 +90,7 @@ router.get("/", async (req, res, next) => {
           id: "vitamina-d3-k2",
           name: "Vitamina D3 + K2",
           price: "R$ 58,90",
+          price_cents: 5890,
           summary: "Suporte básico para rotina de suplementação (demo).",
           details: "Cápsulas de fácil digestão. Consulte orientação profissional antes de iniciar.",
           image_url: "/images/logo-badge.png"
@@ -96,6 +99,7 @@ router.get("/", async (req, res, next) => {
           id: "detergente-neutro",
           name: "Detergente neutro sem perfume",
           price: "R$ 22,90",
+          price_cents: 2290,
           summary: "Limpeza leve para peles e vias sensíveis (demo).",
           details: "Sem corantes e sem fragrância. Ideal para rotina doméstica com sensibilidade.",
           image_url: "/images/logo-badge.png"
@@ -104,6 +108,7 @@ router.get("/", async (req, res, next) => {
           id: "mascara-reutilizavel",
           name: "Máscara reutilizável com filtro",
           price: "R$ 29,90",
+          price_cents: 2990,
           summary: "Proteção confortável para o dia a dia (demo).",
           details: "Material respirável e ajuste ergonômico. Troque o filtro regularmente.",
           image_url: "/images/logo-badge.png"
@@ -115,6 +120,10 @@ router.get("/", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+router.get("/cart", (req, res) => {
+  res.render("cart", { user: req.session.user });
 });
 
 module.exports = router;

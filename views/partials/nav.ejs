@@ -10,6 +10,7 @@
       <div class="hidden md:flex md:items-center md:space-x-8">
         <a href="/" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Home</a>
         <a href="/forum" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Comunidade</a>
+        <a href="/cart" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Carrinho</a>
         <% if (user?.role==='admin' ) { %>
           <a href="/admin/new-post" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Novo Post</a>
         <% } %>
@@ -48,6 +49,7 @@
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       <a href="/" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Home</a>
       <a href="/forum" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Comunidade</a>
+      <a href="/cart" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Carrinho</a>
       <% if (user?.role==='admin' ) { %>
         <a href="/admin/new-post" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Novo Post</a>
       <% } %>
