@@ -4,9 +4,10 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
+    "dev:css": "node ./node_modules/tailwindcss/lib/cli.js -i ./src/tailwind.css -o ./public/app.css --watch",
     "start": "node src/server.js",
     "seed": "node src/seed.js",
-    "build:css": "node ./node_modules/tailwindcss/lib/cli.js -i ./src/tailwind.css -o ./public/app.css",
+    "build:css": "node ./node_modules/tailwindcss/lib/cli.js -i ./src/tailwind.css -o ./public/app.css --minify",
     "build": "npm run build:css"
   },
   "dependencies": {
