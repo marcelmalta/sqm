@@ -57,7 +57,7 @@
           <button id="modal-close" class="text-text-meta hover:text-text-main">✕</button>
         </div>
         <div class="mt-4">
-          <img id="modal-image" src="/images/logo-badge.jpeg" alt="Produto" class="w-full h-48 object-cover rounded-xl border border-white/10" />
+          <img id="modal-image" src="/images/logo-badge.png" alt="Produto" class="w-full h-48 object-cover rounded-xl border border-white/10" />
         </div>
         <div class="mt-4 text-primary font-semibold" id="modal-price"></div>
         <p class="text-text-meta mt-3" id="modal-details"></p>
@@ -93,7 +93,7 @@
         summary.textContent = data.summary;
         price.textContent = data.price;
         details.textContent = data.details;
-        image.src = data.image_url || "/images/logo-badge.jpeg";
+        image.src = data.image_url || "/images/logo-badge.png";
         modal.classList.remove('hidden');
         modal.classList.add('flex');
       }
@@ -121,7 +121,7 @@
             name: product.name,
             price_cents: product.price_cents || null,
             price: product.price,
-            image_url: product.image_url || "/images/logo-badge.jpeg",
+            image_url: product.image_url || "/images/logo-badge.png",
             qty: 1
           });
         }
