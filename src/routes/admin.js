@@ -27,7 +27,7 @@ router.post("/admin/login", (req, res) => {
 });
 
 router.post("/admin/logout", requireAdmin, (req, res) => {
-    req.session.admin = null;
+    req.session = null;
     res.redirect("/");
 });
 

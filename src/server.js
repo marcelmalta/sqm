@@ -1,8 +1,8 @@
 require("dotenv").config();
 const path = require("path");
 const express = require("express");
-const session = require("express-session");
-const SQLiteStoreFactory = require("connect-sqlite3");
+const cookieSession = require("cookie-session");
+const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const csrf = require("csurf");
 
@@ -38,22 +38,29 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static(path.join(process.cwd(), "public")));
 
-const SQLiteStore = SQLiteStoreFactory(session);
 app.use(
-  session({
-    store: new SQLiteStore({ db: "sessions.db", dir: path.join(process.cwd(), "data") }),
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production" }
+  cookieSession({
+    name: "sqm_admin",
+    keys: [sessionSecret],
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: "lax",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production"
   })
 );
 
 app.use((req, res, next) => {
   if (req.path.startsWith("/auth/callback")) return next();
-  csrf()(req, res, next);
+  csrf({
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production"
+    }
+  })(req, res, next);
 });
 app.use((req, res, next) => {
   if (req.path.startsWith("/auth/callback")) return next();
