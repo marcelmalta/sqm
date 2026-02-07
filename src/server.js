@@ -10,7 +10,6 @@ const csrf = require("csurf");
 
 const indexRoutes = require("./routes/index");
 const postsRoutes = require("./routes/posts");
-const forumRoutes = require("./routes/forum");
 const adminRoutes = require("./routes/admin");
 
 const app = express();
@@ -81,7 +80,6 @@ app.use((req, res, next) => {
 
 app.use("/", indexRoutes);
 app.use("/", postsRoutes);
-app.use("/", forumRoutes);
 app.use("/", adminRoutes);
 
 app.use((err, req, res, next) => {

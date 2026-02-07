@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 
 <head>
@@ -9,70 +9,35 @@
   <%- include("partials/nav", { user }) %>
 
   <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-    <section class="glass rounded-2xl border border-white/10 shadow-soft p-6 md:p-10">
-      <div class="flex flex-col md:flex-row items-center gap-8">
+    <section class="relative overflow-hidden glass rounded-2xl border border-white/10 shadow-soft p-6 md:p-10">
+      <div class="absolute -top-24 -right-24 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-white/5 rounded-full blur-3xl"></div>
+      <div class="relative flex flex-col md:flex-row items-start md:items-center gap-8">
         <div class="flex-1">
           <div class="inline-flex items-center gap-3 bg-bg-card border border-white/10 rounded-full px-3 py-1 text-xs text-text-meta">
             <span class="w-2 h-2 rounded-full bg-primary"></span>
-            SQM Brasil · Comunidade + Loja
+            Jornal SQM Brasil · Comunidade em forma de conteúdo
           </div>
-          <h1 class="headline text-3xl md:text-4xl mt-4 text-text-main">SQM Brasil — Comunidade e Loja</h1>
+          <h1 class="headline text-3xl md:text-5xl mt-4 text-text-main">Informação, relatos e trocas do nicho em um só feed</h1>
           <p class="text-text-meta mt-3 max-w-2xl">
-            Um espaço para pessoas com Sensibilidade Química Múltipla (SQM) encontrarem informação, apoio e produtos selecionados.
+            Um jornal vivo da comunidade SQM, com postagens organizadas em cards para leitura e interação rápida.
           </p>
           <div class="mt-6 flex flex-col sm:flex-row gap-3">
-            <a href="/" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-primary text-black font-semibold shadow-glow hover:bg-green-600 transition-colors">Ver produtos</a>
-            <a href="/forum" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-bg-card border border-white/10 text-text-main font-semibold hover:bg-bg-surface transition-colors">Acessar comunidade</a>
+            <a href="#feed" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-primary text-black font-semibold shadow-glow hover:bg-green-600 transition-colors">Ver postagens</a>
+            <a href="/shop" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-bg-card border border-white/10 text-text-main font-semibold hover:bg-bg-surface transition-colors">Ir para shop</a>
           </div>
         </div>
         <div class="flex-shrink-0">
-          <img src="/images/logo-badge.png" alt="SQM Brasil" class="w-32 md:w-40 h-auto" />
+          <div class="w-36 h-36 rounded-3xl bg-gradient-to-br from-primary/30 via-white/5 to-white/0 border border-white/10 shadow-soft flex items-center justify-center">
+            <img src="/images/logo-badge.png" alt="SQM Brasil" class="w-20 h-20" />
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="glass rounded-2xl border border-white/10 shadow-soft p-5">
-        <h3 class="headline text-lg text-text-main">Conteúdo confiável</h3>
-        <p class="text-text-meta mt-2">Publicações oficiais e tópicos da comunidade, com moderação.</p>
-      </div>
-      <div class="glass rounded-2xl border border-white/10 shadow-soft p-5">
-        <h3 class="headline text-lg text-text-main">Loja com foco em sensíveis</h3>
-        <p class="text-text-meta mt-2">Catálogo organizado e fácil de comprar (MVP comercial).</p>
-      </div>
-    </section>
-
-    <!-- Vitrine -->
-    <section class="mt-10">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="headline text-2xl text-text-main">Vitrine</h2>
-        <span class="text-xs text-text-meta">Catálogo demo</span>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <% products.forEach(p=> { %>
-          <button type="button"
-            class="group text-left glass rounded-2xl border border-white/10 p-4 hover:shadow-glow transition-all duration-300 hover:-translate-y-1"
-            data-product='{"id":"<%= p.id %>","name":"<%= p.name %>","price":"<%= p.price %>","price_cents":<%= p.price_cents || 0 %>,"summary":"<%= p.summary %>","details":"<%= p.details %>","image_url":"<%= p.image_url %>"}'>
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary uppercase tracking-wide">Produto</span>
-              <span class="text-xs text-text-meta">demo</span>
-            </div>
-            <div class="mt-3 flex items-center gap-3">
-              <img src="<%= p.image_url %>" alt="Produto" class="w-12 h-12 rounded-xl object-cover" />
-              <div>
-                <div class="headline text-base text-text-main line-clamp-1"><%= p.name %></div>
-                <div class="text-xs text-text-meta line-clamp-1"><%= p.summary %></div>
-              </div>
-            </div>
-            <div class="mt-4 text-primary font-semibold"><%= p.price %></div>
-          </button>
-        <% }) %>
-      </div>
-    </section>
-
-    <section class="mt-8">
+    <section class="mt-8" id="feed">
       <form action="/" method="GET" class="relative">
-        <input type="text" name="q" placeholder="Buscar posts, artigos..." value="<%= q %>"
+        <input type="text" name="q" placeholder="Buscar posts, relatos, tratamentos..." value="<%= q %>"
           class="w-full h-12 pl-12 pr-4 rounded-xl border border-white/10 bg-bg-card text-text-main placeholder-text-meta focus:ring-2 focus:ring-primary focus:outline-none">
         <div class="absolute left-4 top-3.5 text-text-meta">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,78 +64,149 @@
 
       <% if (!posts.length) { %>
         <div class="glass rounded-2xl border border-white/10 text-center p-6">
-          <p class="text-text-meta">Nenhum post encontrado. <% if(user) { %>Que tal <a href="/admin/new-post" class="text-primary hover:underline">criar um</a>?<% } %></p>
+          <p class="text-text-meta">Nenhum post encontrado.</p>
         </div>
       <% } %>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
         <% posts.forEach(p=> { %>
-          <a href="/p/<%= p.slug %>" class="group glass rounded-2xl border border-white/10 p-5 hover:shadow-glow transition-all duration-300 hover:-translate-y-1">
-            <div class="flex items-center justify-between mb-3">
+          <button type="button"
+            class="group text-left glass rounded-2xl border border-white/10 p-5 hover:shadow-glow transition-all duration-300 hover:-translate-y-1"
+            data-post-slug="<%= p.slug %>">
+            <div class="flex items-center justify-between mb-4">
               <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary uppercase tracking-wide"><%= p.category %></span>
               <span class="text-xs text-text-meta"><%= new Date(p.created_at).toLocaleDateString('pt-BR') %></span>
             </div>
             <h3 class="headline text-lg text-text-main group-hover:text-primary line-clamp-2"><%= p.title %></h3>
-            <p class="text-text-meta text-sm line-clamp-3 mt-2"><%= p.excerpt %></p>
+            <p class="text-text-meta text-sm line-clamp-3 mt-3"><%= p.excerpt %></p>
             <div class="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">
               <div class="w-7 h-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold">
                 <%= p.author_display ? p.author_display[0].toUpperCase() : '?' %>
               </div>
               <span class="text-xs text-text-meta font-medium truncate"><%= p.author_display %></span>
             </div>
-          </a>
+          </button>
         <% }) %>
       </div>
     </section>
 
-    <!-- Modal Produto -->
-    <div id="product-modal" class="fixed inset-0 hidden items-center justify-center bg-black/70 backdrop-blur-sm z-50">
-      <div class="glass rounded-2xl border border-white/10 shadow-soft p-6 w-full max-w-lg mx-4">
+    <!-- Modal Post -->
+    <div id="post-modal" class="fixed inset-0 hidden items-center justify-center bg-black/70 backdrop-blur-sm z-50">
+      <div class="glass rounded-2xl border border-white/10 shadow-soft p-6 w-full max-w-3xl mx-4 max-h-[90vh] overflow-y-auto">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h3 id="modal-title" class="headline text-xl text-text-main"></h3>
-            <p id="modal-summary" class="text-text-meta mt-2"></p>
+            <div class="text-xs text-text-meta mb-2" id="modal-meta"></div>
+            <h3 id="modal-title" class="headline text-2xl text-text-main"></h3>
+            <p id="modal-author" class="text-text-meta mt-2"></p>
           </div>
-          <button id="modal-close" class="text-text-meta hover:text-text-main">✕</button>
+          <button id="post-modal-close" class="text-text-meta hover:text-text-main">✕</button>
         </div>
-        <div class="mt-4">
-          <img id="modal-image" src="/images/logo-badge.png" alt="Produto" class="w-full h-48 object-cover rounded-xl border border-white/10" />
+        <div class="mt-5">
+          <p id="modal-content" class="text-text-main leading-relaxed whitespace-pre-wrap"></p>
         </div>
-        <div class="mt-4 text-primary font-semibold" id="modal-price"></div>
-        <p class="text-text-meta mt-3" id="modal-details"></p>
-        <div class="mt-6 flex flex-col sm:flex-row gap-3">
-          <button id="modal-add"
-            class="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-black font-semibold shadow-glow hover:bg-green-600 transition-colors">
-            Adicionar ao carrinho
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button id="like-btn" class="px-4 py-2 rounded-lg bg-bg-card border border-white/10 text-text-main hover:bg-bg-surface transition-colors">
+            👍 Curtir <span id="like-count" class="text-text-meta ml-1">0</span>
           </button>
-          <button id="modal-close-2" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-bg-card border border-white/10 text-text-main hover:bg-bg-surface transition-colors">
-            Fechar
-          </button>
+          <button id="share-btn" class="px-4 py-2 rounded-lg bg-bg-card border border-white/10 text-text-main hover:bg-bg-surface transition-colors">Compartilhar</button>
+          <a id="full-link" href="#" class="px-4 py-2 rounded-lg bg-primary text-black font-semibold hover:bg-green-600 transition-colors">Abrir post</a>
+        </div>
+
+        <div class="mt-6 border-t border-white/10 pt-6">
+          <h4 class="headline text-lg text-text-main mb-3">Comente</h4>
+          <form id="modal-comment-form" method="post" action="#" class="space-y-3">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="form_ts" id="modal-form-ts" value="">
+            <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <input type="text" name="author_name" required minlength="2" maxlength="60"
+                class="w-full bg-bg-card border-white/10 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-bg-surface transition-all text-base"
+                placeholder="Seu nome">
+              <input type="email" name="author_email" maxlength="120"
+                class="w-full bg-bg-card border-white/10 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-bg-surface transition-all text-base"
+                placeholder="Seu email (opcional)">
+            </div>
+            <textarea name="body" rows="4"
+              class="w-full bg-bg-card border-white/10 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-bg-surface transition-all text-base"
+              placeholder="Escreva sua opinião..." required></textarea>
+            <div class="flex justify-end">
+              <button class="bg-primary text-black px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors shadow-glow">Enviar comentário</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </main>
 
   <script>
+    window.__POSTS__ = <%- JSON.stringify(posts.map(p => ({
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      content: p.content,
+      category: p.category,
+      author: p.author_display,
+      created_at: p.created_at
+    }))) %>;
+
     (function () {
-      const modal = document.getElementById('product-modal');
+      const modal = document.getElementById('post-modal');
+      const closeBtn = document.getElementById('post-modal-close');
       const title = document.getElementById('modal-title');
-      const summary = document.getElementById('modal-summary');
-      const price = document.getElementById('modal-price');
-      const details = document.getElementById('modal-details');
-      const image = document.getElementById('modal-image');
-      const addBtn = document.getElementById('modal-add');
-      let currentProduct = null;
-      const close1 = document.getElementById('modal-close');
-      const close2 = document.getElementById('modal-close-2');
+      const content = document.getElementById('modal-content');
+      const meta = document.getElementById('modal-meta');
+      const author = document.getElementById('modal-author');
+      const fullLink = document.getElementById('full-link');
+      const likeBtn = document.getElementById('like-btn');
+      const likeCount = document.getElementById('like-count');
+      const shareBtn = document.getElementById('share-btn');
+      const form = document.getElementById('modal-comment-form');
+      const formTs = document.getElementById('modal-form-ts');
+
+      function getLikes(slug) {
+        try {
+          return Number(localStorage.getItem('like_' + slug) || '0');
+        } catch {
+          return 0;
+        }
+      }
+
+      function setLikes(slug, value) {
+        try {
+          localStorage.setItem('like_' + slug, String(value));
+        } catch {}
+      }
 
       function openModal(data) {
-        currentProduct = data;
-        title.textContent = data.name;
-        summary.textContent = data.summary;
-        price.textContent = data.price;
-        details.textContent = data.details;
-        image.src = data.image_url || "/images/logo-badge.png";
+        if (!data) return;
+        title.textContent = data.title;
+        content.textContent = data.content || data.excerpt;
+        meta.textContent = data.category + ' · ' + new Date(data.created_at).toLocaleDateString('pt-BR');
+        author.textContent = 'Por ' + (data.author || 'Anônimo');
+        fullLink.href = '/p/' + data.slug;
+        form.action = '/p/' + data.slug + '/comment';
+        formTs.value = Date.now();
+
+        const likes = getLikes(data.slug);
+        likeCount.textContent = likes;
+        likeBtn.onclick = () => {
+          const next = getLikes(data.slug) + 1;
+          setLikes(data.slug, next);
+          likeCount.textContent = next;
+        };
+
+        shareBtn.onclick = async () => {
+          const url = window.location.origin + '/p/' + data.slug;
+          try {
+            await navigator.clipboard.writeText(url);
+            shareBtn.textContent = 'Link copiado';
+            setTimeout(() => (shareBtn.textContent = 'Compartilhar'), 1500);
+          } catch {
+            window.open(url, '_blank');
+          }
+        };
+
         modal.classList.remove('hidden');
         modal.classList.add('flex');
       }
@@ -180,39 +216,20 @@
         modal.classList.remove('flex');
       }
 
-      document.querySelectorAll('[data-product]').forEach(btn => {
+      const posts = (window.__POSTS__ || []).reduce((acc, p) => {
+        acc[p.slug] = p;
+        return acc;
+      }, {});
+
+      document.querySelectorAll('[data-post-slug]').forEach(btn => {
         btn.addEventListener('click', () => {
-          const data = JSON.parse(btn.getAttribute('data-product'));
+          const slug = btn.getAttribute('data-post-slug');
+          const data = posts[slug];
           openModal(data);
         });
       });
 
-      function addToCart(product) {
-        const cart = JSON.parse(localStorage.getItem('sqm_cart') || '[]');
-        const existing = cart.find(i => i.id === product.id);
-        if (existing) {
-          existing.qty += 1;
-        } else {
-          cart.push({
-            id: product.id,
-            name: product.name,
-            price_cents: product.price_cents || null,
-            price: product.price,
-            image_url: product.image_url || "/images/logo-badge.png",
-            qty: 1
-          });
-        }
-        localStorage.setItem('sqm_cart', JSON.stringify(cart));
-      }
-
-      addBtn.addEventListener('click', () => {
-        if (!currentProduct) return;
-        addToCart(currentProduct);
-        closeModal();
-      });
-
-      close1.addEventListener('click', closeModal);
-      close2.addEventListener('click', closeModal);
+      closeBtn.addEventListener('click', closeModal);
       modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
       });

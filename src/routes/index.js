@@ -47,13 +47,21 @@ router.get("/", async (req, res, next) => {
       .map(([category, n]) => ({ category, n }))
       .sort((a, b) => b.n - a.n || a.category.localeCompare(b.category));
 
+    res.render("index", { user: res.locals.user, posts, categories, q, cat });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/shop", async (req, res, next) => {
+  try {
     let products = [];
     const { data: productsData, error: productsError } = await supabase
       .from("products")
       .select("id, slug, name, summary, details, price_cents, currency, image_url")
       .eq("active", true)
       .order("created_at", { ascending: false })
-      .limit(8);
+      .limit(12);
 
     if (productsError && productsError.code !== "PGRST205") {
       throw productsError;
@@ -119,7 +127,7 @@ router.get("/", async (req, res, next) => {
       ];
     }
 
-    res.render("index", { user: res.locals.user, posts, categories, q, cat, products });
+    res.render("shop", { user: res.locals.user, products });
   } catch (err) {
     next(err);
   }

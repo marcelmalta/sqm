@@ -8,8 +8,8 @@
       </div>
 
       <div class="hidden md:flex md:items-center md:space-x-8">
-        <a href="/" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Home</a>
-        <a href="/forum" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Comunidade</a>
+        <a href="/" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Jornal</a>
+        <a href="/shop" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Shop</a>
         <a href="/cart" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Carrinho</a>
         <% if (user?.role==='admin' ) { %>
           <a href="/admin/moderation" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Moderação</a>
@@ -44,8 +44,8 @@
 
   <div class="hidden md:hidden bg-bg-surface/90 border-t border-white/5" id="mobile-menu">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <a href="/" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Home</a>
-      <a href="/forum" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Comunidade</a>
+      <a href="/" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Jornal</a>
+      <a href="/shop" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Shop</a>
       <a href="/cart" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Carrinho</a>
       <% if (user?.role==='admin' ) { %>
         <a href="/admin/moderation" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Moderação</a>

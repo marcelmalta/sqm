@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+
+<head>
+  <%- include("partials/head") %>
+</head>
+
+<body class="page-enter bg-bg-main text-text-main flex flex-col min-h-screen">
+  <%- include("partials/nav", { user }) %>
+
+  <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <section class="glass rounded-2xl border border-white/10 shadow-soft p-6 md:p-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 class="headline text-2xl md:text-3xl text-text-main">Shop</h1>
+          <p class="text-text-meta mt-2">Seleção de itens úteis para o dia a dia. Espaço secundário do projeto.</p>
+        </div>
+        <a href="/" class="text-sm text-text-meta hover:text-primary">Voltar ao jornal</a>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="headline text-xl text-text-main">Vitrine</h2>
+        <span class="text-xs text-text-meta">Catálogo demo</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <% products.forEach(p=> { %>
+          <button type="button"
+            class="group text-left glass rounded-2xl border border-white/10 p-4 hover:shadow-glow transition-all duration-300 hover:-translate-y-1"
+            data-product='{"id":"<%= p.id %>","name":"<%= p.name %>","price":"<%= p.price %>","price_cents":<%= p.price_cents || 0 %>,"summary":"<%= p.summary %>","details":"<%= p.details %>","image_url":"<%= p.image_url %>"}'>
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary uppercase tracking-wide">Produto</span>
+              <span class="text-xs text-text-meta">demo</span>
+            </div>
+            <div class="mt-3 flex items-center gap-3">
+              <img src="<%= p.image_url %>" alt="Produto" class="w-12 h-12 rounded-xl object-cover" />
+              <div>
+                <div class="headline text-base text-text-main line-clamp-1"><%= p.name %></div>
+                <div class="text-xs text-text-meta line-clamp-1"><%= p.summary %></div>
+              </div>
+            </div>
+            <div class="mt-4 text-primary font-semibold"><%= p.price %></div>
+          </button>
+        <% }) %>
+      </div>
+    </section>
+
+    <!-- Modal Produto -->
+    <div id="product-modal" class="fixed inset-0 hidden items-center justify-center bg-black/70 backdrop-blur-sm z-50">
+      <div class="glass rounded-2xl border border-white/10 shadow-soft p-6 w-full max-w-lg mx-4">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 id="modal-title" class="headline text-xl text-text-main"></h3>
+            <p id="modal-summary" class="text-text-meta mt-2"></p>
+          </div>
+          <button id="modal-close" class="text-text-meta hover:text-text-main">✕</button>
+        </div>
+        <div class="mt-4">
+          <img id="modal-image" src="/images/logo-badge.png" alt="Produto" class="w-full h-48 object-cover rounded-xl border border-white/10" />
+        </div>
+        <div class="mt-4 text-primary font-semibold" id="modal-price"></div>
+        <p class="text-text-meta mt-3" id="modal-details"></p>
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+          <button id="modal-add"
+            class="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-black font-semibold shadow-glow hover:bg-green-600 transition-colors">
+            Adicionar ao carrinho
+          </button>
+          <button id="modal-close-2" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-bg-card border border-white/10 text-text-main hover:bg-bg-surface transition-colors">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const modal = document.getElementById('product-modal');
+      const title = document.getElementById('modal-title');
+      const summary = document.getElementById('modal-summary');
+      const price = document.getElementById('modal-price');
+      const details = document.getElementById('modal-details');
+      const image = document.getElementById('modal-image');
+      const addBtn = document.getElementById('modal-add');
+      let currentProduct = null;
+      const close1 = document.getElementById('modal-close');
+      const close2 = document.getElementById('modal-close-2');
+
+      function openModal(data) {
+        currentProduct = data;
+        title.textContent = data.name;
+        summary.textContent = data.summary;
+        price.textContent = data.price;
+        details.textContent = data.details;
+        image.src = data.image_url || "/images/logo-badge.png";
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      document.querySelectorAll('[data-product]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const data = JSON.parse(btn.getAttribute('data-product'));
+          openModal(data);
+        });
+      });
+
+      function addToCart(product) {
+        const cart = JSON.parse(localStorage.getItem('sqm_cart') || '[]');
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) {
+          existing.qty += 1;
+        } else {
+          cart.push({
+            id: product.id,
+            name: product.name,
+            price_cents: product.price_cents || null,
+            price: product.price,
+            image_url: product.image_url || "/images/logo-badge.png",
+            qty: 1
+          });
+        }
+        localStorage.setItem('sqm_cart', JSON.stringify(cart));
+      }
+
+      addBtn.addEventListener('click', () => {
+        if (!currentProduct) return;
+        addToCart(currentProduct);
+        closeModal();
+      });
+
+      close1.addEventListener('click', closeModal);
+      close2.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    })();
+  </script>
+</body>
+
+</html>
