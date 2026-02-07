@@ -2,7 +2,8 @@ const express = require("express");
 const slugify = require("slugify");
 const { z } = require("zod");
 const { supabase } = require("../supabase");
-const { requireAdmin, requireAuth } = require("../middleware/auth");
+const { requireAdmin } = require("../middleware/auth");
+const { commentLimiter, isHoneypotFilled, isFormTimingValid } = require("../middleware/antiSpam");
 
 const router = express.Router();
 
@@ -16,10 +17,11 @@ router.get("/p/:slug", async (req, res, next) => {
       .single();
 
     if (postError || !postData) {
-      return res.status(404).render("error", { message: "Post não encontrado.", user: req.session.user });
+      return res.status(404).render("error", { message: "Post não encontrado.", user: res.locals.user });
     }
 
-    const post = { ...postData, author_email: postData.users ? postData.users.email : null };
+    const authorDisplay = postData.author_name || postData.author_email || (postData.users ? postData.users.email : null) || "Anônimo";
+    const post = { ...postData, author_display: authorDisplay };
 
     const { data: commentsData, error: commentsError } = await supabase
       .from("comments")
@@ -30,16 +32,19 @@ router.get("/p/:slug", async (req, res, next) => {
 
     if (commentsError) throw commentsError;
 
-    const comments = commentsData.map(c => ({ ...c, author_email: c.users ? c.users.email : null }));
+    const comments = commentsData.map(c => {
+      const display = c.author_name || c.author_email || (c.users ? c.users.email : null) || "Anônimo";
+      return { ...c, author_display: display };
+    });
 
-    res.render("post", { user: req.session.user, post, comments });
+    res.render("post", { user: res.locals.user, post, comments, formTs: Date.now() });
   } catch (err) {
     next(err);
   }
 });
 
 // Post comment
-router.post("/p/:slug/comment", requireAuth, async (req, res, next) => {
+router.post("/p/:slug/comment", commentLimiter, async (req, res, next) => {
   try {
     const { data: post, error: findError } = await supabase
       .from("posts")
@@ -49,9 +54,23 @@ router.post("/p/:slug/comment", requireAuth, async (req, res, next) => {
 
     if (findError || !post) return res.status(404).send("Post não encontrado.");
 
-    const schema = z.object({ body: z.string().min(1).max(2000) });
+    if (isHoneypotFilled(req.body)) {
+      return res.status(400).send("Comentário inválido.");
+    }
+    if (!isFormTimingValid(req.body)) {
+      return res.status(400).send("Envio muito rápido. Tente novamente.");
+    }
+
+    const schema = z.object({
+      author_name: z.string().min(2).max(60),
+      author_email: z.string().email().optional().or(z.literal("")),
+      body: z.string().min(1).max(2000)
+    });
     const parsed = schema.safeParse(req.body);
     if (!parsed.success) return res.status(400).send("Comentário inválido.");
+
+    const authorName = parsed.data.author_name.trim();
+    const authorEmail = parsed.data.author_email ? parsed.data.author_email.trim() : null;
 
     const { error: insertError } = await supabase
       .from("comments")
@@ -59,7 +78,8 @@ router.post("/p/:slug/comment", requireAuth, async (req, res, next) => {
         parent_type: "post",
         parent_id: post.id,
         body: parsed.data.body,
-        author_id: req.session.user.id
+        author_name: authorName,
+        author_email: authorEmail || null
       }]);
 
     if (insertError) throw insertError;
@@ -72,7 +92,7 @@ router.post("/p/:slug/comment", requireAuth, async (req, res, next) => {
 
 // Admin - Create Post
 router.get("/admin/new-post", requireAdmin, (req, res) => {
-  res.render("new-post", { user: req.session.user, error: null });
+  res.render("new-post", { user: res.locals.user, error: null });
 });
 
 router.post("/admin/new-post", requireAdmin, async (req, res, next) => {
@@ -88,7 +108,7 @@ router.post("/admin/new-post", requireAdmin, async (req, res, next) => {
 
     const parsed = schema.safeParse(req.body);
     if (!parsed.success) {
-      return res.status(400).render("new-post", { user: req.session.user, error: "Dados inválidos: " + parsed.error.issues.map(i => i.message).join(", ") });
+      return res.status(400).render("new-post", { user: res.locals.user, error: "Dados inválidos: " + parsed.error.issues.map(i => i.message).join(", ") });
     }
 
     const { title, excerpt, content, category, tags, source_url } = parsed.data;
@@ -119,7 +139,8 @@ router.post("/admin/new-post", requireAdmin, async (req, res, next) => {
         category,
         tags: JSON.stringify(tagArr),
         source_url: source_url || null,
-        author_id: req.session.user.id
+        author_name: process.env.ADMIN_NAME || "Admin",
+        author_email: process.env.ADMIN_EMAIL || null
       }]);
 
     if (insertError) throw insertError;

@@ -9,49 +9,62 @@
   <%- include("partials/nav", { user }) %>
 
   <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <% if (pending) { %>
+      <div class="mb-6 p-4 bg-yellow-50 text-yellow-800 rounded-lg text-sm font-medium border border-yellow-100">
+        Tópico enviado para moderação. Em breve ficará visível.
+      </div>
+    <% } %>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
       <div>
         <h1 class="headline text-3xl text-text-main">Comunidade</h1>
         <p class="text-text-meta mt-1">Discuta tratamentos, notícias e compartilhe experiências.</p>
       </div>
-      <% if (!user) { %>
-        <a href="/login" class="inline-flex items-center justify-center px-6 py-3 rounded-xl text-black bg-primary hover:bg-green-600 shadow-glow transition-colors w-full md:w-auto text-center">Entrar para Criar Tópico</a>
-      <% } else { %>
-        <button onclick="document.getElementById('new-topic-form').classList.toggle('hidden')"
-          class="inline-flex items-center justify-center px-6 py-3 rounded-xl text-black bg-primary hover:bg-green-600 shadow-glow transition-colors w-full md:w-auto">
-          + Criar Novo Tópico
-        </button>
-      <% } %>
+      <button onclick="document.getElementById('new-topic-form').classList.toggle('hidden')"
+        class="inline-flex items-center justify-center px-6 py-3 rounded-xl text-black bg-primary hover:bg-green-600 shadow-glow transition-colors w-full md:w-auto">
+        + Criar Novo Tópico
+      </button>
     </div>
 
-    <% if (user) { %>
-      <div id="new-topic-form" class="hidden mb-6 glass p-6 rounded-2xl shadow-soft border border-white/10 animate-fade-in">
-        <h3 class="headline text-lg text-text-main mb-4">Novo Tópico</h3>
-        <form action="/forum/new" method="POST" class="space-y-4">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="md:col-span-1">
-              <label class="block text-sm font-medium text-text-main mb-1">Categoria</label>
-              <input type="text" name="category" placeholder="Ex: Tratamentos"
-                class="w-full h-10 rounded-lg border border-white/10 bg-bg-card focus:ring-primary focus:border-primary">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-text-main mb-1">Título</label>
-              <input type="text" name="title" required minlength="5" maxlength="160"
-                class="w-full h-10 rounded-lg border border-white/10 bg-bg-card focus:ring-primary focus:border-primary">
-            </div>
+    <div id="new-topic-form" class="hidden mb-6 glass p-6 rounded-2xl shadow-soft border border-white/10 animate-fade-in">
+      <h3 class="headline text-lg text-text-main mb-4">Novo Tópico</h3>
+      <form action="/forum/new" method="POST" class="space-y-4">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="form_ts" value="<%= formTs %>">
+        <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-1">
+            <label class="block text-sm font-medium text-text-main mb-1">Categoria</label>
+            <input type="text" name="category" placeholder="Ex: Tratamentos"
+              class="w-full h-10 rounded-lg border border-white/10 bg-bg-card focus:ring-primary focus:border-primary">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-text-main mb-1">Título</label>
+            <input type="text" name="title" required minlength="5" maxlength="160"
+              class="w-full h-10 rounded-lg border border-white/10 bg-bg-card focus:ring-primary focus:border-primary">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-text-main mb-1">Seu nome</label>
+            <input type="text" name="author_name" required minlength="2" maxlength="60"
+              class="w-full h-10 rounded-lg border border-white/10 bg-bg-card focus:ring-primary focus:border-primary">
           </div>
           <div>
-            <label class="block text-sm font-medium text-text-main mb-1">Mensagem</label>
-            <textarea name="body" rows="4" required minlength="10"
-              class="w-full rounded-lg border border-white/10 bg-bg-card focus:ring-primary focus:border-primary"></textarea>
+            <label class="block text-sm font-medium text-text-main mb-1">Seu email (opcional)</label>
+            <input type="email" name="author_email" maxlength="120"
+              class="w-full h-10 rounded-lg border border-white/10 bg-bg-card focus:ring-primary focus:border-primary">
           </div>
-          <div class="flex justify-end">
-            <button class="px-6 py-2 bg-primary text-black rounded-lg hover:bg-green-600 font-medium transition-colors shadow-glow">Publicar Tópico</button>
-          </div>
-        </form>
-      </div>
-    <% } %>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-text-main mb-1">Mensagem</label>
+          <textarea name="body" rows="4" required minlength="10"
+            class="w-full rounded-lg border border-white/10 bg-bg-card focus:ring-primary focus:border-primary"></textarea>
+        </div>
+        <div class="flex justify-end">
+          <button class="px-6 py-2 bg-primary text-black rounded-lg hover:bg-green-600 font-medium transition-colors shadow-glow">Publicar Tópico</button>
+        </div>
+      </form>
+    </div>
 
     <div class="flex items-center gap-6 mb-6 border-b border-white/10 pb-px overflow-x-auto text-sm font-medium">
       <button class="text-primary border-b-2 border-primary pb-3 px-1">Mais Recentes</button>
@@ -77,9 +90,9 @@
               <h3 class="headline text-lg text-text-main group-hover:text-primary transition-colors line-clamp-1"><%= t.title %></h3>
               <div class="flex items-center gap-2 text-xs text-text-meta">
                 <div class="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-primary text-[10px] font-bold">
-                  <%= t.author_email ? t.author_email[0].toUpperCase() : '?' %>
+                  <%= t.author_display ? t.author_display[0].toUpperCase() : '?' %>
                 </div>
-                <span class="text-text-meta group-hover:text-text-main transition-colors"><%= t.author_email %></span>
+                <span class="text-text-meta group-hover:text-text-main transition-colors"><%= t.author_display %></span>
               </div>
             </div>
           </div>

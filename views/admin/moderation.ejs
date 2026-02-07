@@ -12,13 +12,11 @@
 
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-text-main">Painel de Moderação</h1>
-                <p class="text-text-meta mt-1">Gerencie usuários e conteúdo da comunidade.</p>
+            <p class="text-text-meta mt-1">Gerencie conteúdo da comunidade.</p>
             </div>
 
             <!-- Tabs -->
             <div class="flex items-center gap-1 bg-bg-card p-1 rounded-xl shadow-sm border border-white/60 mb-6 w-fit">
-                <a href="?tab=users"
-                    class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'users' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-bg-card/70' %>">Usuários</a>
                 <a href="?tab=topics"
                     class="px-6 py-2 rounded-lg text-sm font-medium transition-colors <%= tab === 'topics' ? 'bg-primary text-white shadow-sm' : 'text-text-meta hover:text-text-main hover:bg-bg-card/70' %>">Tópicos</a>
                 <a href="?tab=comments"
@@ -27,83 +25,53 @@
 
             <!-- Content Area -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <% if (tab==='users' ) { %>
-                    <% items.forEach(u=> { %>
-                        <div class="glass rounded-2xl p-6 border border-white/60 shadow-sm">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div
-                                    class="w-12 h-12 bg-bg-surface rounded-full flex items-center justify-center text-text-meta font-bold">
-                                    <%= u.email[0].toUpperCase() %>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-text-main">
-                                        <%= u.email %>
-                                    </div>
-                                    <div class="text-xs text-text-meta">ID: <%= u.id %> • <%= u.role %>
-                                    </div>
-                                </div>
+                <% if (tab==='topics' ) { %>
+                    <% items.forEach(t=> { %>
+                        <div class="glass rounded-2xl p-6 border border-white/60 shadow-sm relative group">
+                            <span class="absolute top-4 right-4 text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">
+                                <%= t.category %>
+                            </span>
+                            <h3 class="font-bold text-text-main pr-12 mb-2 line-clamp-1">
+                                <%= t.title %>
+                            </h3>
+                            <p class="text-sm text-text-meta line-clamp-2 mb-4">
+                                <%= t.body %>
+                            </p>
+                            <div class="text-xs text-text-meta mb-3">
+                                <%= new Date(t.created_at).toLocaleDateString() %> • <%= t.author_name || t.author_email || "Anônimo" %> • <%= t.status || "pending" %>
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                <a href="/u/<%= u.id %>"
-                                    class="px-3 py-1 bg-bg-card/70 text-text-main text-xs font-medium rounded-lg hover:bg-bg-surface border border-white/10">Ver
-                                    Perfil</a>
-                                <form action="/admin/ban/<%= u.id %>" method="POST"
-                                    onsubmit="return confirm('Tem certeza que quer banir este usuário?')">
+                            <div class="flex items-center justify-between mt-auto">
+                                <div class="flex gap-2">
+                                    <% if (t.status !== 'approved') { %>
+                                        <form action="/admin/approve-topic/<%= t.id %>" method="POST">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                            <button class="px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-lg hover:bg-green-100 border border-green-100">Aprovar</button>
+                                        </form>
+                                    <% } %>
+                                    <form action="/admin/hide-topic/<%= t.id %>" method="POST">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button class="px-3 py-1 bg-yellow-50 text-yellow-700 text-xs font-bold rounded-lg hover:bg-yellow-100 border border-yellow-100">Ocultar</button>
+                                    </form>
+                                </div>
+                                <form action="/admin/delete-topic/<%= t.id %>" method="POST" onsubmit="return confirm('Excluir tópico?')">
                                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                    <button
-                                        class="px-3 py-1 bg-red-50 text-red-600 text-xs font-bold rounded-lg hover:bg-red-100 border border-red-100">Banir</button>
-                                </form>
-                                <form action="/admin/promote/<%= u.id %>" method="POST"
-                                    onsubmit="return confirm('Promover a Admin?')">
-                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                    <button
-                                        class="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold rounded-lg hover:bg-blue-100 border border-blue-100">Promover</button>
+                                    <button class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors">
+                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
                                 </form>
                             </div>
                         </div>
-                        <% }) %>
-                            <% } else if (tab==='topics' ) { %>
-                                <% items.forEach(t=> { %>
-                                    <div
-                                        class="glass rounded-2xl p-6 border border-white/60 shadow-sm relative group">
-                                        <span
-                                            class="absolute top-4 right-4 text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">
-                                            <%= t.category %>
-                                        </span>
-                                        <h3 class="font-bold text-text-main pr-12 mb-2 line-clamp-1">
-                                            <%= t.title %>
-                                        </h3>
-                                        <p class="text-sm text-text-meta line-clamp-2 mb-4">
-                                            <%= t.body %>
-                                        </p>
-                                        <div class="flex items-center justify-between mt-auto">
-                                            <div class="text-xs text-text-meta">
-                                                <%= new Date(t.created_at).toLocaleDateString() %> • <%= t.users?.email
-                                                        %>
-                                            </div>
-                                            <form action="/admin/delete-topic/<%= t.id %>" method="POST"
-                                                onsubmit="return confirm('Excluir tópico?')">
-                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                                <button
-                                                    class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors">
-                                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                                        stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <% }) %>
-                                        <% } else { %>
+                    <% }) %>
+                <% } else { %>
                                             <!-- Comments -->
                                             <% items.forEach(c=> { %>
                                                 <div
                                                     class="glass rounded-2xl p-6 border border-white/60 shadow-sm relative">
                                                     <div class="text-xs text-text-meta mb-2">
-                                                        Autor: <%= c.users?.email %> • <%= new
+                                                        Autor: <%= c.author_name || c.author_email || "Anônimo" %> • <%= new
                                                                 Date(c.created_at).toLocaleDateString() %>
                                                     </div>
                                                     <div

@@ -26,7 +26,10 @@ router.get("/", async (req, res, next) => {
     if (postsError) throw postsError;
 
     // Transform result to match template expectation (users.email -> author_email)
-    const posts = postsData.map(p => ({ ...p, author_email: p.users ? p.users.email : null }));
+    const posts = postsData.map(p => {
+      const display = p.author_name || p.author_email || (p.users ? p.users.email : null) || "Anônimo";
+      return { ...p, author_display: display };
+    });
 
     // Aggregation for categories (Client-side for MVP)
     const { data: allCats, error: catError } = await supabase
@@ -116,14 +119,14 @@ router.get("/", async (req, res, next) => {
       ];
     }
 
-    res.render("index", { user: req.session.user, posts, categories, q, cat, products });
+    res.render("index", { user: res.locals.user, posts, categories, q, cat, products });
   } catch (err) {
     next(err);
   }
 });
 
 router.get("/cart", (req, res) => {
-  res.render("cart", { user: req.session.user });
+  res.render("cart", { user: res.locals.user });
 });
 
 module.exports = router;

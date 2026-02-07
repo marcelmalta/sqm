@@ -20,6 +20,8 @@ create table public.posts (
   category text not null default 'Geral',
   tags text not null default '[]',
   source_url text,
+  author_name text,
+  author_email text,
   author_id bigint references public.users(id) on delete set null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
@@ -30,6 +32,9 @@ create table public.topics (
   category text not null default 'Geral',
   title text not null,
   body text not null,
+  author_name text,
+  author_email text,
+  status text not null default 'pending',
   author_id bigint references public.users(id) on delete set null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
@@ -40,6 +45,8 @@ create table public.comments (
   parent_type text not null check (parent_type in ('post', 'topic')),
   parent_id bigint not null,
   body text not null,
+  author_name text,
+  author_email text,
   author_id bigint references public.users(id) on delete set null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
@@ -69,3 +76,11 @@ create index if not exists idx_products_active on public.products(active);
 -- alter table public.users add column if not exists auth_user_id uuid;
 -- alter table public.users alter column password_hash drop not null;
 -- create unique index if not exists users_auth_user_id_key on public.users(auth_user_id);
+-- alter table public.posts add column if not exists author_name text;
+-- alter table public.posts add column if not exists author_email text;
+-- alter table public.topics add column if not exists author_name text;
+-- alter table public.topics add column if not exists author_email text;
+-- alter table public.topics add column if not exists status text not null default 'pending';
+-- alter table public.comments add column if not exists author_name text;
+-- alter table public.comments add column if not exists author_email text;
+-- update public.topics set status = 'approved' where status is null;

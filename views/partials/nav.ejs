@@ -12,21 +12,18 @@
         <a href="/forum" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Comunidade</a>
         <a href="/cart" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Carrinho</a>
         <% if (user?.role==='admin' ) { %>
+          <a href="/admin/moderation" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Moderação</a>
           <a href="/admin/new-post" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Novo Post</a>
-        <% } %>
-
-        <% if (user) { %>
           <div class="ml-4 flex items-center gap-4">
             <span class="text-xs text-text-meta"><%= user.email %></span>
-            <form method="post" action="/logout" class="inline">
+            <form method="post" action="/admin/logout" class="inline">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-              <button class="bg-bg-card hover:bg-bg-surface text-text-main px-4 py-2 rounded-lg text-sm font-semibold transition-colors border border-white/10">Sair</button>
+              <button class="bg-bg-card hover:bg-bg-surface text-text-main px-4 py-2 rounded-lg text-sm font-semibold transition-colors border border-white/10">Sair Admin</button>
             </form>
           </div>
         <% } else { %>
           <div class="ml-4 flex items-center gap-3">
-            <a href="/login" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Entrar</a>
-            <a href="/register" class="bg-primary hover:bg-green-600 text-black px-4 py-2 rounded-lg text-sm font-semibold shadow-glow transition-colors">Criar conta</a>
+            <a href="/admin/login" class="text-text-main hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Admin</a>
           </div>
         <% } %>
       </div>
@@ -51,26 +48,26 @@
       <a href="/forum" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Comunidade</a>
       <a href="/cart" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Carrinho</a>
       <% if (user?.role==='admin' ) { %>
+        <a href="/admin/moderation" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Moderação</a>
         <a href="/admin/new-post" class="text-text-main hover:text-primary hover:bg-bg-card block px-3 py-2 rounded-md text-base font-semibold">Novo Post</a>
       <% } %>
     </div>
     <div class="pt-4 pb-4 border-t border-white/5">
-      <% if (user) { %>
+      <% if (user?.role==='admin') { %>
         <div class="flex items-center px-5">
           <div class="ml-3">
             <div class="text-base font-semibold leading-none text-text-main"><%= user.email %></div>
           </div>
         </div>
         <div class="mt-3 px-2 space-y-1">
-          <form method="post" action="/logout">
+          <form method="post" action="/admin/logout">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="block w-full text-left px-3 py-2 rounded-md text-base font-semibold text-text-meta hover:text-text-main hover:bg-bg-card">Sair</button>
+            <button class="block w-full text-left px-3 py-2 rounded-md text-base font-semibold text-text-meta hover:text-text-main hover:bg-bg-card">Sair Admin</button>
           </form>
         </div>
       <% } else { %>
         <div class="mt-3 px-2 space-y-2">
-          <a href="/login" class="block w-full text-center px-4 py-2 border border-white/10 rounded-lg text-base font-semibold text-text-main bg-bg-card hover:bg-bg-surface">Entrar</a>
-          <a href="/register" class="block w-full text-center px-4 py-2 border border-transparent rounded-lg text-base font-semibold text-black bg-primary hover:bg-green-600 shadow-glow">Criar conta</a>
+          <a href="/admin/login" class="block w-full text-center px-4 py-2 border border-white/10 rounded-lg text-base font-semibold text-text-main bg-bg-card hover:bg-bg-surface">Admin</a>
         </div>
       <% } %>
     </div>

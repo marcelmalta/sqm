@@ -114,9 +114,9 @@
             <p class="text-text-meta text-sm line-clamp-3 mt-2"><%= p.excerpt %></p>
             <div class="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">
               <div class="w-7 h-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold">
-                <%= p.author_email ? p.author_email[0].toUpperCase() : '?' %>
+                <%= p.author_display ? p.author_display[0].toUpperCase() : '?' %>
               </div>
-              <span class="text-xs text-text-meta font-medium truncate"><%= p.author_email %></span>
+              <span class="text-xs text-text-meta font-medium truncate"><%= p.author_display %></span>
             </div>
           </a>
         <% }) %>

@@ -4,43 +4,75 @@ const { requireAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
+router.get("/admin/login", (req, res) => {
+    res.render("admin/login", { user: res.locals.user, error: null });
+});
+
+router.post("/admin/login", (req, res) => {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) {
+        return res.status(500).render("admin/login", {
+            user: null,
+            error: "ADMIN_PASSWORD n\xE3o definido no .env."
+        });
+    }
+
+    const password = (req.body.password || "").trim();
+    if (!password || password !== adminPassword) {
+        return res.status(401).render("admin/login", { user: null, error: "Senha inv\xE1lida." });
+    }
+
+    req.session.admin = { loggedIn: true };
+    res.redirect("/admin/moderation");
+});
+
+router.post("/admin/logout", requireAdmin, (req, res) => {
+    req.session.admin = null;
+    res.redirect("/");
+});
+
 router.get("/admin/moderation", requireAdmin, async (req, res, next) => {
     try {
-        const tab = req.query.tab || "users";
+        const tab = req.query.tab || "topics";
         let items = [];
 
-        if (tab === "users") {
-            const { data } = await supabase.from("users").select("*").order("created_at", { ascending: false }).limit(50);
-            items = data || [];
-        } else if (tab === "topics") {
-            const { data } = await supabase.from("topics").select("*, users(email)").order("created_at", { ascending: false }).limit(50);
+        if (tab === "topics") {
+            const { data } = await supabase
+                .from("topics")
+                .select("*")
+                .order("created_at", { ascending: false })
+                .limit(50);
             items = data || [];
         } else if (tab === "comments") {
-            const { data } = await supabase.from("comments").select("*, users(email)").order("created_at", { ascending: false }).limit(50);
+            const { data } = await supabase
+                .from("comments")
+                .select("*")
+                .order("created_at", { ascending: false })
+                .limit(50);
             items = data || [];
         }
 
-        res.render("admin/moderation", { user: req.session.user, tab, items });
+        res.render("admin/moderation", { user: res.locals.user, tab, items });
     } catch (err) {
         next(err);
     }
 });
 
-// Ban User
-router.post("/admin/ban/:id", requireAdmin, async (req, res, next) => {
+// Approve Topic
+router.post("/admin/approve-topic/:id", requireAdmin, async (req, res, next) => {
     try {
-        await supabase.from("users").update({ role: "banned" }).eq("id", req.params.id);
-        res.redirect("/admin/moderation?tab=users");
+        await supabase.from("topics").update({ status: "approved" }).eq("id", req.params.id);
+        res.redirect("/admin/moderation?tab=topics");
     } catch (err) {
         next(err);
     }
 });
 
-// Promote User
-router.post("/admin/promote/:id", requireAdmin, async (req, res, next) => {
+// Hide Topic
+router.post("/admin/hide-topic/:id", requireAdmin, async (req, res, next) => {
     try {
-        await supabase.from("users").update({ role: "admin" }).eq("id", req.params.id);
-        res.redirect("/admin/moderation?tab=users");
+        await supabase.from("topics").update({ status: "hidden" }).eq("id", req.params.id);
+        res.redirect("/admin/moderation?tab=topics");
     } catch (err) {
         next(err);
     }

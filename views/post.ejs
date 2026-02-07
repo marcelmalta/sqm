@@ -23,7 +23,7 @@
 
         <div class="flex items-center justify-center gap-2 mb-8 md:mb-12 border-b border-white/10 pb-8">
           <span class="text-text-meta text-sm italic">Escrito por</span>
-          <span class="font-bold text-text-main text-sm"><%= post.author_email %></span>
+          <span class="font-bold text-text-main text-sm"><%= post.author_display %></span>
         </div>
 
         <% if (post.source_url) { %>
@@ -57,13 +57,13 @@
           <div class="flex gap-4 group">
             <div class="flex-shrink-0">
               <div class="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-sm">
-                <%= c.author_email ? c.author_email[0].toUpperCase() : '?' %>
+                <%= c.author_display ? c.author_display[0].toUpperCase() : '?' %>
               </div>
             </div>
             <div class="flex-grow">
               <div class="bg-bg-card p-4 rounded-2xl rounded-tl-none shadow-soft border border-white/10">
                 <div class="flex items-baseline justify-between mb-2">
-                  <span class="font-bold text-text-main text-sm"><%= c.author_email || "Anônimo" %></span>
+                  <span class="font-bold text-text-main text-sm"><%= c.author_display || "Anônimo" %></span>
                   <span class="text-xs text-text-meta"><%= new Date(c.created_at).toLocaleString('pt-BR') %></span>
                 </div>
                 <div class="text-text-main text-sm md:text-base whitespace-pre-wrap leading-relaxed"><%= c.body %></div>
@@ -74,23 +74,26 @@
       </div>
 
       <div class="glass rounded-2xl shadow-soft border border-white/10 p-6 md:p-8">
-        <% if (user) { %>
-          <form method="post" action="/p/<%= post.slug %>/comment" class="space-y-4">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <h3 class="font-bold text-text-main">Deixe seu comentário</h3>
-            <textarea name="body" rows="4"
+        <form method="post" action="/p/<%= post.slug %>/comment" class="space-y-4">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" name="form_ts" value="<%= formTs %>">
+          <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
+          <h3 class="font-bold text-text-main">Deixe seu comentário</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <input type="text" name="author_name" required minlength="2" maxlength="60"
               class="w-full bg-bg-card border-white/10 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-bg-surface transition-all text-base"
-              placeholder="Escreva sua opinião..." required></textarea>
-            <div class="flex justify-end">
-              <button class="bg-primary text-black px-8 py-3 rounded-xl font-bold hover:bg-green-600 transition-colors shadow-glow">Publicar Comentário</button>
-            </div>
-          </form>
-        <% } else { %>
-          <div class="text-center py-4">
-            <p class="text-text-main mb-4">Você precisa estar logado para comentar.</p>
-            <a href="/login" class="inline-block px-6 py-2 border border-white/10 rounded-lg text-text-main font-medium hover:bg-bg-surface transition-colors">Fazer Login</a>
+              placeholder="Seu nome">
+            <input type="email" name="author_email" maxlength="120"
+              class="w-full bg-bg-card border-white/10 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-bg-surface transition-all text-base"
+              placeholder="Seu email (opcional)">
           </div>
-        <% } %>
+          <textarea name="body" rows="4"
+            class="w-full bg-bg-card border-white/10 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:bg-bg-surface transition-all text-base"
+            placeholder="Escreva sua opinião..." required></textarea>
+          <div class="flex justify-end">
+            <button class="bg-primary text-black px-8 py-3 rounded-xl font-bold hover:bg-green-600 transition-colors shadow-glow">Publicar Comentário</button>
+          </div>
+        </form>
       </div>
     </section>
   </main>

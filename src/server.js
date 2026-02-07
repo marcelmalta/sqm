@@ -9,10 +9,8 @@ const csrf = require("csurf");
 // require("./db"); // SQLite desativado para migração Supabase
 
 const indexRoutes = require("./routes/index");
-const authRoutes = require("./routes/auth");
 const postsRoutes = require("./routes/posts");
 const forumRoutes = require("./routes/forum");
-const profileRoutes = require("./routes/profile");
 const adminRoutes = require("./routes/admin");
 
 const app = express();
@@ -62,25 +60,34 @@ app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken();
   next();
 });
+app.use((req, res, next) => {
+  if (req.session?.admin) {
+    res.locals.user = {
+      role: "admin",
+      email: process.env.ADMIN_EMAIL || "admin"
+    };
+  } else {
+    res.locals.user = null;
+  }
+  next();
+});
 
 app.use("/", indexRoutes);
-app.use("/", authRoutes);
 app.use("/", postsRoutes);
 app.use("/", forumRoutes);
-app.use("/", profileRoutes);
 app.use("/", adminRoutes);
 
 app.use((err, req, res, next) => {
   if (err.code === "EBADCSRFTOKEN") {
     return res.status(403).render("error", {
       message: "Token CSRF inv\xE1lido. Atualize a p\xE1gina e tente novamente.",
-      user: req.session ? req.session.user : null
+      user: res.locals.user
     });
   }
   console.error(err.stack);
   res.status(500).render("error", {
     message: "Ocorreu um erro interno no servidor.",
-    user: req.session ? req.session.user : null
+    user: res.locals.user
   });
 });
 
